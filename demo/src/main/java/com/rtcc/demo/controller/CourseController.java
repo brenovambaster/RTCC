@@ -22,12 +22,9 @@ import java.util.Optional;
 @Tag(name = "Courses", description = "API to manage courses")
 public class CourseController {
 
-    private final CourseRepository courseRepository;
-
     @Autowired
-    public CourseController(CourseRepository courseRepository) {
-        this.courseRepository = courseRepository;
-    }
+    private CourseRepository courseRepository;
+
 
     @Operation(summary = "Save a new course",
             description = "Save a new course with the provided details.",
@@ -36,6 +33,7 @@ public class CourseController {
                     @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
             })
     @PostMapping
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Void> saveCourse(@RequestBody CourseRequestDTO data) {
         Course course = new Course(data);
         courseRepository.save(course);
@@ -49,6 +47,7 @@ public class CourseController {
                     @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
             })
     @GetMapping
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<CourseResponseDTO>> getAllCourses() {
         List<CourseResponseDTO> courseList = courseRepository.findAll()
                 .stream()
@@ -64,6 +63,7 @@ public class CourseController {
                     @ApiResponse(responseCode = "404", description = "Course not found", content = @Content)
             })
     @GetMapping("/{id}")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<CourseResponseDTO> getCourse(@PathVariable String id) {
         Optional<Course> courseOpt = courseRepository.findById(id);
 
@@ -82,6 +82,7 @@ public class CourseController {
                     @ApiResponse(responseCode = "404", description = "Course not found", content = @Content)
             })
     @DeleteMapping("/{id}")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Void> deleteCourse(@PathVariable String id) {
         if (!courseRepository.existsById(id)) {
             return ResponseEntity.notFound().build();

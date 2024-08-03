@@ -68,6 +68,36 @@ public class ProfessorController {
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PutMapping("/{id}")
+    @Operation(summary = "Update professor by ID",
+            description = "Update a professor by its ID, if it exists. Otherwise, return 404 Not Found.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Professor updated successfully"),
+                    @ApiResponse(responseCode = "404", description = "Professor not found")
+            })
+    public ResponseEntity<ProfessorResponseDTO> updateProfessor(@PathVariable String id, @RequestBody ProfessorRequestDTO data) {
+        Optional<Professor> professorOptional = professorRepository.findById(id);
+
+        if (professorOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Professor professor = professorOptional.get();
+
+        professor.setName(data.name());
+        professor.setEmail(data.email());
+        professor.setTitle(data.title());
+        professor.setLocationOfWork(data.locationOfWork());
+        professor.setResearchArea(data.researchArea());
+
+
+        professorRepository.save(professor);
+
+        ProfessorResponseDTO professorResponse = new ProfessorResponseDTO(professor);
+        return ResponseEntity.ok().body(professorResponse);
+    }
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @DeleteMapping("/{id}")
     @Operation(summary = "Remove professor by id", description = "Remove a professor by its ID, if it exists. Otherwise, return 404 Not Found.",
             responses = {
