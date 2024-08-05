@@ -31,7 +31,8 @@ public class CourseController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Course saved successfully"),
                     @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
-            })
+            }
+    )
     @PostMapping
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Void> saveCourse(@RequestBody CourseRequestDTO data) {
@@ -45,7 +46,8 @@ public class CourseController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "List of courses", content = @Content(schema = @Schema(implementation = CourseResponseDTO.class))),
                     @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
-            })
+            }
+    )
     @GetMapping
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<CourseResponseDTO>> getAllCourses() {
@@ -61,7 +63,8 @@ public class CourseController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Course found", content = @Content(schema = @Schema(implementation = CourseResponseDTO.class))),
                     @ApiResponse(responseCode = "404", description = "Course not found", content = @Content)
-            })
+            }
+    )
     @GetMapping("/{id}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<CourseResponseDTO> getCourse(@PathVariable String id) {
@@ -80,7 +83,8 @@ public class CourseController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Course deleted successfully"),
                     @ApiResponse(responseCode = "404", description = "Course not found", content = @Content)
-            })
+            }
+    )
     @DeleteMapping("/{id}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Void> deleteCourse(@PathVariable String id) {
@@ -89,5 +93,33 @@ public class CourseController {
         }
         courseRepository.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PutMapping("/{id}")
+    @Operation(summary = "Update course by ID",
+            description = "Update a course by its ID, if it exists. Otherwise, return 404 Not Found.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Course updated successfully"),
+                    @ApiResponse(responseCode = "404", description = "Course not found")
+            }
+    )
+    public ResponseEntity<CourseResponseDTO> updateCurso(@PathVariable String id, @RequestBody CourseRequestDTO data) {
+        Optional<Course> cursoOptional = courseRepository.findById(id);
+
+        if (cursoOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Course curso = cursoOptional.get();
+
+        curso.setName(data.name());
+        curso.setCampus(data.campus());
+        curso.setCodeOfCourse(data.codeOfCourse());
+
+        courseRepository.save(curso);
+
+        CourseResponseDTO cursoResponse = new CourseResponseDTO(curso);
+        return ResponseEntity.ok().body(cursoResponse);
     }
 }
