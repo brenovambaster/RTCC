@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +27,9 @@ public class CoordinatorController {
     @Autowired
     private CoordinatorRepository coordinatorRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @Operation(summary = "Save a new coordinator",
             description = "Save a new coordinator with the provided details.",
@@ -37,6 +42,11 @@ public class CoordinatorController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Void> saveCoordinator(@RequestBody CoordinatorRequestDTO data) {
         Coordinator coordinator = new Coordinator(data);
+
+        String encodedPassword = passwordEncoder.encode(data.password());
+
+        coordinator.setPassword(encodedPassword);
+
         coordinatorRepository.save(coordinator);
         return ResponseEntity.ok().build();
     }
