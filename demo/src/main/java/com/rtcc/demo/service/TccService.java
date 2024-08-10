@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class TccService {
@@ -24,11 +24,6 @@ public class TccService {
     @Autowired
     private TccRepository tccRepository;
 
-    public TccService(CourseRepository courseRepository, ProfessorRepository professorRepository) {
-        this.courseRepository = courseRepository;
-        this.professorRepository = professorRepository;
-    }
-
     public Tcc convertToEntity(TccRequestDTO dto) {
         Course course = courseRepository.findById(dto.course())
                 .orElseThrow(() -> new RuntimeException("Course not found"));
@@ -36,10 +31,13 @@ public class TccService {
         Professor advisor = professorRepository.findById(dto.advisor())
                 .orElseThrow(() -> new RuntimeException("Advisor not found"));
 
-        List<String> committeeMemberIds = dto.committeeMembers().stream()
-                .collect(Collectors.toList());
+        List<String> committeeMemberIds = dto.committeeMembers();
+        Set<Professor> committeeMembers = new HashSet<>();
 
-        Set<Professor> committeeMembers = new HashSet<>(professorRepository.findAllById(committeeMemberIds));
+        for (String id : committeeMemberIds) {
+            professorRepository.findById(id).ifPresent(committeeMembers::add);
+        }
+
         return new Tcc(
                 null,
                 dto.title(),
@@ -56,8 +54,23 @@ public class TccService {
         );
     }
 
-    public Tcc save(Tcc tcc) {
+    public Tcc saveTcc(Tcc tcc) {
         return tccRepository.save(tcc);
     }
 
+    public Optional<Tcc> findById(String id) {
+        return tccRepository.findById(id);
+    }
+
+    public List<Tcc> findAll() {
+        return tccRepository.findAll();
+    }
+
+    public void deleteTcc(String id) {
+        tccRepository.deleteById(id);
+    }
+
+    public boolean existsById(String id) {
+        return tccRepository.existsById(id);
+    }
 }

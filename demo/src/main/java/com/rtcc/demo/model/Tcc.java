@@ -1,6 +1,5 @@
 package com.rtcc.demo.model;
 
-import com.rtcc.demo.DTOs.TccRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,7 +31,7 @@ public class Tcc {
     private String author;
 
     @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
+    @JoinColumn(name = "course", nullable = false)
     private Course course;
 
     @Column(name = "defense_date", nullable = false)
@@ -56,13 +55,9 @@ public class Tcc {
     @Column(columnDefinition = "TEXT")
     private String summary;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", name = "abstract")
     private String abstractText;
 
     @Column(columnDefinition = "TEXT")
     private String keywords;
-
-    public Tcc(TccRequestDTO data) {
-
-    }
 }

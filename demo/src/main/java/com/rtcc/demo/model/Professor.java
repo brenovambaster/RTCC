@@ -24,12 +24,6 @@ public class Professor {
     private String email;
     private String locationOfWork;
 
-    @OneToMany(mappedBy = "advisor")
-    private Set<Tcc> advisedTccs = new HashSet<>();
-
-    @ManyToMany(mappedBy = "committeeMembers")
-    private Set<Tcc> committeeTccs = new HashSet<>();
-
     public Professor(ProfessorRequestDTO data) {
         this.name = data.name();
         this.researchArea = data.researchArea();
