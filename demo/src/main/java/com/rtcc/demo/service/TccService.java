@@ -1,5 +1,7 @@
 package com.rtcc.demo.service;
 
+import com.rtcc.demo.DTOs.CourseResponseDTO;
+import com.rtcc.demo.DTOs.ProfessorResponseDTO;
 import com.rtcc.demo.DTOs.TccRequestDTO;
 import com.rtcc.demo.DTOs.TccResponseDTO;
 import com.rtcc.demo.model.Course;
@@ -132,11 +134,11 @@ public class TccService {
                 tcc.getId(),
                 tcc.getTitle(),
                 tcc.getAuthor(),
-                tcc.getCourse().getId(),
+                new CourseResponseDTO(tcc.getCourse()),
                 tcc.getDefenseDate(),
                 tcc.getLanguage(),
-                tcc.getAdvisor().getId(),
-                tcc.getCommitteeMembers().stream().map(Professor::getId).toList(),
+                new ProfessorResponseDTO(tcc.getAdvisor()),
+                tcc.getCommitteeMembers().stream().map(ProfessorResponseDTO::new).toList(),
                 tcc.getSummary(),
                 tcc.getAbstractText(),
                 tcc.getKeywords(),
