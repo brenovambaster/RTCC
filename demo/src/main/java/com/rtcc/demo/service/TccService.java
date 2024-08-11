@@ -36,7 +36,7 @@ public class TccService {
      * @param dto
      * @return
      */
-    public Tcc convertToEntity(TccRequestDTO dto) {
+    public Tcc convertDtoToEntity(TccRequestDTO dto) {
         Course course = courseRepository.findById(dto.course())
                 .orElseThrow(() -> new RuntimeException("Course not found"));
 
@@ -144,5 +144,22 @@ public class TccService {
                 tcc.getKeywords(),
                 tcc.getPathFile()
         );
+    }
+
+
+    /**
+     * Verifica se os campos obrigatórios do DTO estão preenchidos
+     *
+     * @param tccRequestDTO
+     * @return true se todos os campos obrigatórios estiverem preenchidos, false caso contrário
+     */
+    public boolean dtoIsValid(TccRequestDTO tccRequestDTO) {
+        if (tccRequestDTO.title() == null || tccRequestDTO.author() == null || tccRequestDTO.course() == null
+                || tccRequestDTO.defenseDate() == null || tccRequestDTO.language() == null || tccRequestDTO.advisor()
+                == null || tccRequestDTO.committeeMembers() == null || tccRequestDTO.summary() == null ||
+                tccRequestDTO.abstractText() == null || tccRequestDTO.keywords() == null) {
+            return false;
+        }
+        return true;
     }
 }

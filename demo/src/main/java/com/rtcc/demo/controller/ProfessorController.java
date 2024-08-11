@@ -24,9 +24,10 @@ public class ProfessorController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
-    @Operation(summary = "Sava a new professor", description = "Add a new professor into database", responses = {
-            @ApiResponse(responseCode = "200", description = "Professor saved successfully")
-    })
+    @Operation(summary = "Sava a new professor", description = "Add a new professor into database",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Professor saved successfully")
+            })
     public ResponseEntity<Void> saveProfessor(@RequestBody ProfessorRequestDTO data) {
         Professor professorData = new Professor(data);
         professorRepository.save(professorData);
