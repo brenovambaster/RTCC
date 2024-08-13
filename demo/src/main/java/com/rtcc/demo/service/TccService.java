@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TccService {
@@ -162,4 +163,32 @@ public class TccService {
         }
         return true;
     }
+
+    public List<Tcc> searchTccs(String query) {
+        String[] keywords = query.split("\\+");
+        List<Tcc> result = new ArrayList<>();
+
+        for (String keyword : keywords) {
+            result.addAll(tccRepository.searchTccs(keyword.trim()));
+        }
+
+        return result.stream().distinct().collect(Collectors.toList());
+    }
+
+//    public List<Tcc> filterTccs(String filter, String value) {
+//        switch (filter.toLowerCase()) {
+//            case "title":
+//                return tccRepository.findByTitleContainingIgnoreCase(value);
+//            case "author":
+//                return tccRepository.findByAuthorContainingIgnoreCase(value);
+//            case "advisor":
+//                return tccRepository.findByAdvisorContainingIgnoreCase(value);
+//            case "course":
+//                return tccRepository.findByCourseContainingIgnoreCase(value);
+//            case "keywords":
+//                return tccRepository.findByKeywordsContainingIgnoreCase(value);
+//            default:
+//                return Collections.emptyList(); // Return empty list if filter is not recognized
+//        }
+//    }
 }
