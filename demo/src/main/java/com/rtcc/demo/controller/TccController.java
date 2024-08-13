@@ -1,6 +1,7 @@
 package com.rtcc.demo.controller;
 
 
+import com.rtcc.demo.DTOs.FilterDTO;
 import com.rtcc.demo.DTOs.TccRequestDTO;
 import com.rtcc.demo.DTOs.TccResponseDTO;
 import com.rtcc.demo.model.Tcc;
@@ -73,8 +74,8 @@ public class TccController {
 
             List<String> committeeMembers = (
                     committeeMembersList.stream()
-                    .map(member -> member.get("id"))
-                    .collect(Collectors.toList())
+                            .map(member -> member.get("id"))
+                            .collect(Collectors.toList())
             );
 
             TccRequestDTO updatedTccRequestDTO = new TccRequestDTO(
@@ -167,8 +168,8 @@ public class TccController {
 
             List<String> committeeMembers = (
                     committeeMembersList.stream()
-                    .map(member -> member.get("id"))
-                    .collect(Collectors.toList())
+                            .map(member -> member.get("id"))
+                            .collect(Collectors.toList())
             );
 
             TccRequestDTO updatedTccRequestDTO = new TccRequestDTO(
@@ -251,23 +252,16 @@ public class TccController {
     }
 
 
-//    @GetMapping("/filter")
-//    @CrossOrigin(origins = "*", allowedHeaders = "*")
-//    @Operation(
-//            summary = "Filter TCCs",
-//            description = "Filter TCCs based on the provided filter and value",
-//            responses = {
-//                    @ApiResponse(responseCode = "200", description = "Success")
-//            }
-//    )
-//    public ResponseEntity<List<TccResponseDTO>> filterTccs(@RequestParam String filter, @RequestParam String value) {
-//        List<Tcc> tccList = tccService.filterTccs(filter, value);
-//
-//        List<TccResponseDTO> tccResponseDTOList = tccList.stream()
-//                .map(tccService::convertToResponseDTO)
-//                .toList();
-//        return ResponseEntity.status(HttpStatus.OK).body(tccResponseDTOList);
-//    }
+    @GetMapping("/filter")
+    public ResponseEntity<List<TccResponseDTO>> filterTccs(@RequestBody FilterDTO filterDTO) {
+        String filter = filterDTO.getFilter();
+        String value = filterDTO.getValue();
+        List<Tcc> tccList = tccService.filterTccs(filter, value);
 
+        List<TccResponseDTO> tccResponseDTOList = tccList.stream()
+                .map(tccService::convertToResponseDTO)
+                .toList();
+        return ResponseEntity.status(HttpStatus.OK).body(tccResponseDTOList);
+    }
 
 }

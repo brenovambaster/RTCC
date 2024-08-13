@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -164,6 +165,12 @@ public class TccService {
         return true;
     }
 
+    /**
+     * Search Tccs by a query string that can contain multiple keywords
+     *
+     * @param query
+     * @return List of Tcc
+     */
     public List<Tcc> searchTccs(String query) {
         String[] keywords = query.split("\\+");
         List<Tcc> result = new ArrayList<>();
@@ -175,20 +182,30 @@ public class TccService {
         return result.stream().distinct().collect(Collectors.toList());
     }
 
-//    public List<Tcc> filterTccs(String filter, String value) {
-//        switch (filter.toLowerCase()) {
-//            case "title":
-//                return tccRepository.findByTitleContainingIgnoreCase(value);
-//            case "author":
-//                return tccRepository.findByAuthorContainingIgnoreCase(value);
-//            case "advisor":
-//                return tccRepository.findByAdvisorContainingIgnoreCase(value);
-//            case "course":
-//                return tccRepository.findByCourseContainingIgnoreCase(value);
-//            case "keywords":
-//                return tccRepository.findByKeywordsContainingIgnoreCase(value);
-//            default:
-//                return Collections.emptyList(); // Return empty list if filter is not recognized
-//        }
-//    }
+    /**
+     * Filter Tccs by a specific field
+     *
+     * @param filter
+     * @param value
+     * @return List of Tcc
+     */
+    public List<Tcc> filterTccs(String filter, String value) {
+        switch (filter.toLowerCase()) {
+            case "title":
+                return tccRepository.searchTccsByTitle(value);
+            case "defense_date":
+                return tccRepository.searchTccsByDefenseDate(LocalDate.parse(value));
+            case "advisor":
+                return tccRepository.searchTccsByAdvisor(value);
+            case "author":
+                return tccRepository.searchTccsByAuthor(value);
+            case "course":
+                return tccRepository.searchTccsByCourse(value);
+            case "keywords":
+                return tccRepository.searchTccsByKeywords(value);
+            default:
+                throw new IllegalArgumentException("Filtro inválido: " + filter);
+        }
+
+    }
 }

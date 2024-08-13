@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TccRepository extends JpaRepository<Tcc, String> {
@@ -22,14 +23,22 @@ public interface TccRepository extends JpaRepository<Tcc, String> {
     List<Tcc> searchTccs(@Param("keyword") String keyword);
 
 
-//    @Query(value = "SELECT * FROM tcc " +
-//            "WHERE LOWER(title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-//            "LOWER(author) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-//            "LOWER(advisor) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-//            "LOWER(course) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-//            "LOWER(keywords) LIKE LOWER(CONCAT('%', :keyword, '%'))",
-//            nativeQuery = true)
-//    List<Tcc> searchTccsByFilter(String filter, String value);
+    @Query("SELECT t FROM Tcc t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :value, '%'))")
+    List<Tcc> searchTccsByTitle(@Param("value") String value);
 
+    @Query("SELECT t FROM Tcc t WHERE t.defenseDate = :value")
+    List<Tcc> searchTccsByDefenseDate(@Param("value") LocalDate value);
+
+    @Query("SELECT t FROM Tcc t WHERE LOWER(t.advisor) = :value")
+    List<Tcc> searchTccsByAdvisor(@Param("value") String value);
+
+    @Query("SELECT t FROM Tcc t WHERE LOWER(t.author) LIKE LOWER(CONCAT('%', :value, '%'))")
+    List<Tcc> searchTccsByAuthor(@Param("value") String value);
+
+    @Query("SELECT t FROM Tcc t WHERE LOWER(t.course) = :value")
+    List<Tcc> searchTccsByCourse(@Param("value") String courseId);
+
+    @Query("SELECT t FROM Tcc t WHERE LOWER(t.keywords) LIKE LOWER(CONCAT('%', :value, '%'))")
+    List<Tcc> searchTccsByKeywords(@Param("value") String value);
 
 }
