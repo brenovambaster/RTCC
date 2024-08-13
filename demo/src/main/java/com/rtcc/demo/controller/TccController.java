@@ -101,7 +101,7 @@ public class TccController {
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
         } catch (Exception e) {
-            e.printStackTrace(); // Melhor prática: usar um logger para logar erros
+            e.printStackTrace(); // Melhor prÃ¡tica: usar um logger para logar erros
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
@@ -151,7 +151,7 @@ public class TccController {
             }
     )
     public ResponseEntity<TccResponseDTO> updateTcc(@PathVariable String id,
-                                                    @RequestParam("file") MultipartFile file,
+                                                    MultipartFile file,
                                                     @RequestParam("tccData") String tccData) {
 
         try {
@@ -192,22 +192,17 @@ public class TccController {
             if (existingTcc.isEmpty())
                 return ResponseEntity.notFound().build();
 
-            if (file.isEmpty()) {
-                return ResponseEntity.badRequest().build();
-            }
-            if (!file.getContentType().equals("application/pdf")) {
-                return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
-            }
-
             Tcc tcc = tccService.convertDtoToEntity(updatedTccRequestDTO);
 
             tcc.setId(id);
 
             tcc.setPathFile(existingTcc.get().getPathFile());
 
-            tccService.removeFile(tcc.getPathFile());
+            if (file != null) {
+                tccService.removeFile(tcc.getPathFile());
 
-            tcc.setPathFile(tccService.saveFile(file));
+                tcc.setPathFile(tccService.saveFile(file));
+            }
 
             tcc = tccService.saveTcc(tcc);
 
