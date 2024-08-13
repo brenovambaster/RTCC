@@ -15,9 +15,9 @@ VALUES ('7ab5ea9f-fa3d-48eb-a274-7ce35a341c04', 'Danilo', 'breno.cardoso@gail.co
        ('e29a3908-f411-405e-9764-e86680dbf13d', 'adm polls', 'breno@breno.com', 'admin',
         '$2a$10$X6r88iB5c1fckSL9NDnY6unM7PPHFLh1DefS/NxtPekv4wHTf3hKq', 'Ciência da Computação');
 
-INSERT INTO course (id, name, campus, code_of_course)
-VALUES ('571c2a36-a191-455a-b675-296768e80887', 'Matematica', 'Montes Claros', '432'),
-       ('d03e6fbd-5215-4a80-9d62-a507997dc6f9', 'POrtugues', 'Montes Claros', '4234');
+INSERT INTO course (id, name, code_of_course)
+VALUES ('571c2a36-a191-455a-b675-296768e80887', 'Matematica', '432'),
+       ('d03e6fbd-5215-4a80-9d62-a507997dc6f9', 'POrtugues', '4234');
 
 INSERT INTO tcc (id, title, author, course, defense_date, advisor, summary, abstract, keywords, language, path_file)
 VALUES ('21c85274-9fc7-484d-8c1e-b68b82c45058', 'Title', 'Lucas Azevedo', '571c2a36-a191-455a-b675-296768e80887',

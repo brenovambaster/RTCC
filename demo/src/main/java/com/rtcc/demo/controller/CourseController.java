@@ -114,7 +114,6 @@ public class CourseController {
         Course curso = cursoOptional.get();
 
         curso.setName(data.name());
-        curso.setCampus(data.campus());
         curso.setCodeOfCourse(data.codeOfCourse());
 
         courseRepository.save(curso);

@@ -18,13 +18,10 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
-    String campus;
     String codeOfCourse;
 
     public Course(CourseRequestDTO courseRequestDTO) {
         this.name = courseRequestDTO.name();
-        this.campus = courseRequestDTO.campus();
         this.codeOfCourse = courseRequestDTO.codeOfCourse();
-
     }
 }
