@@ -4,6 +4,9 @@ import com.rtcc.demo.DTOs.ProfessorRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Table(name = "professor")
 @Entity(name = "professor")
 @Getter
