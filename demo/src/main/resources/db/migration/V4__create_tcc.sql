@@ -15,13 +15,14 @@ CREATE TABLE tcc
     CONSTRAINT fk_advisor FOREIGN KEY (advisor) REFERENCES professor (id)
 );
 
+
 CREATE TABLE tcc_committee_members
 (
     tcc_id       TEXT NOT NULL,
     professor_id TEXT NOT NULL,
     CONSTRAINT pk_tcc_committee PRIMARY KEY (tcc_id, professor_id),
-    CONSTRAINT fk_tcc FOREIGN KEY (tcc_id) REFERENCES tcc (id) ON DELETE CASCADE,
-    CONSTRAINT fk_professor FOREIGN KEY (professor_id) REFERENCES professor (id) ON DELETE CASCADE
+    CONSTRAINT fk_tcc FOREIGN KEY (tcc_id) REFERENCES tcc (id),
+    CONSTRAINT fk_professor FOREIGN KEY (professor_id) REFERENCES professor (id)
 );
 
 -- ID está como TEXT pois O banco de dados não precisa saber que é um UUID.

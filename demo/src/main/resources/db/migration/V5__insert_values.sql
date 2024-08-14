@@ -1,31 +1,28 @@
-INSERT INTO professor (id, name, email, research_area, title, location_of_work)
-VALUES ('0753b2bc-175a-4ff4-9b8b-7580a2826c2f', 'Rafael Marques Loiola', 'rafa@gmail.com', 'Matematica', 'Licenciatura',
-        'Interno'),
-       ('b6e7bcbf-a309-4869-a4f0-80df1262a7db', 'Breno Vambaster Cardoso', 'brenovambaster5@gmail.com', 'Computacao',
-        'Doutor', 'Interno'),
-       ('da4934e6-6326-4d1f-8f29-27949aa528c4', 'Lucas Matos Dias', 'lucas@gmail.com', 'quimica', 'Mestre', 'Externo');
-
+INSERT INTO course (id, name, code_of_course)
+VALUES
+    ('a4d2f1f3-75e0-4e9a-b0d3-2a7262cf564f', 'Ciência da Computação', 'CC01'),
+    ('e564e6b4-7c92-4d3e-b0e2-d2c6b9a16c76', 'Engenharia Elétrica', 'EE01'),
+    ('f7b7b3a0-3b68-4f69-a5c2-3b5c9825d451', 'Engenharia Química', 'EQ01');
 
 
 INSERT INTO coordinator (id, name, email, username, password, course)
-VALUES ('7ab5ea9f-fa3d-48eb-a274-7ce35a341c04', 'Danilo', 'breno.cardoso@gail.com', 'danilo',
-        '$2a$10$D41bhmUnVTTTB9OjmuJ1iOwAMt7rPZTS2pUtGc4RZFqgVB1l8rrby', 'Ciência da Computação'),
-       ('7b2344ae-8374-425d-aa80-7ca88add98cc', '34', 'brenovambaster5@gmail.com', 'breno',
-        '$2a$10$h0L6LSgjc/RVGfva1C.vquvhht/n1Clx81tcBHgvq4merr2neORKO', 'Ciência da Computação'),
-       ('e29a3908-f411-405e-9764-e86680dbf13d', 'adm polls', 'breno@breno.com', 'admin',
-        '$2a$10$X6r88iB5c1fckSL9NDnY6unM7PPHFLh1DefS/NxtPekv4wHTf3hKq', 'Ciência da Computação');
-
-INSERT INTO course (id, name, code_of_course)
-VALUES ('571c2a36-a191-455a-b675-296768e80887', 'Matematica', '432'),
-       ('d03e6fbd-5215-4a80-9d62-a507997dc6f9', 'POrtugues', '4234');
-
-INSERT INTO tcc (id, title, author, course, defense_date, advisor, summary, abstract, keywords, language, path_file)
-VALUES ('21c85274-9fc7-484d-8c1e-b68b82c45058', 'Title', 'Lucas Azevedo', '571c2a36-a191-455a-b675-296768e80887',
-        '2024-01-01', 'b6e7bcbf-a309-4869-a4f0-80df1262a7db', 'This is a summary of the TCC.',
-        'This is an abstract of the TCC.', 'batata, pera, teste', 'EN',
-        'C:\\Users\\breno\\Documents\\github\\RTCC\\uploads\\70e39af0-b35b-4e1f-8a6a-9d09ae559c49.pdf');
+VALUES
+    ('6c4f8d6e-1d2e-4b6c-b8b5-58b13ed6a6d1', 'João Silva', 'joao.silva@ifnmg.com.br', 'joao', '$2a$10$K6S6KiRtJ66uSFI8ewtYc.ihA4x/fMI3ErYr/ZG9PFAcAlrCqRxG.', 'Ciência da Computação'),
+    ('b287c44b-5aaf-45e3-8e14-0cfcff5b686b', 'Mariana Costa', 'mariana.costa@ifnmg.com.br', 'mariana', '$2a$10$C7h7EFiFJ8JkG8z.E/5u6OXZj/cX0BThw/8cz7Tr3ocMy7GFuLp2K', 'Engenharia Elétrica'),
+    ('c847d22f-8c7d-4e62-8321-e606d6caa0a4', 'Pedro Lima', 'pedro.lima@ifnmg.com.br', 'pedro', '$2a$10$K9VfDRouOB.tV9g6m9RlyOJ2.rffN1mdf88gyS2bMa/Uo1d6fTceO', 'Engenharia Química');
 
 
-INSERT INTO tcc_committee_members (tcc_id, professor_id)
-VALUES ('21c85274-9fc7-484d-8c1e-b68b82c45058', '0753b2bc-175a-4ff4-9b8b-7580a2826c2f'),
-       ('21c85274-9fc7-484d-8c1e-b68b82c45058', 'da4934e6-6326-4d1f-8f29-27949aa528c4');
+INSERT INTO professor (id, name, email, research_area, title, location_of_work)
+VALUES
+    ('d5a4b637-6299-4f87-900d-89b23a6b7c8a', 'Ana Beatriz Silva', 'ana.silva@ifnmg.com.br', 'Matematica', 'Doutor', 'Interno'),
+    ('f6b74d68-d382-4b42-87bc-237f7cb2ea11', 'Carlos Pereira', 'carlos.pereira@ifnmg.com.br', 'Álgebra Abstrata', 'Mestre', 'Externo'),
+    ('a2e6b28b-012f-4b92-a344-2b5b5d603f33', 'Juliana Souza', 'juliana.souza@ifnmg.com.br', 'Teoria da Medida', 'Doutor', 'Interno'),
+    ('5c9e9796-6b76-4b69-80f2-3e2e5f5825b2', 'Mariana Oliveira', 'mariana.oliveira@ifnmg.com.br', 'Espaços Métricos', 'Mestre', 'Interno'),
+    ('c9a3833e-d90f-4c35-89d7-405c4c5cb535', 'Fernando Lima', 'fernando.lima@ifnmg.com.br', 'Teoria Quântica de Campos', 'Licenciatura', 'Externo'),
+    ('a5e2b139-5390-4a52-9d99-f9e5b40cb37b', 'Fernanda Costa', 'fernanda.costa@ifnmg.com.br', 'Geometria Diferencial', 'Doutor', 'Interno'),
+    ('b1a1cdd4-d2a5-4de6-91f0-d035a1f3b8ee', 'Lucas Santos', 'lucas.santos@ifnmg.com.br', 'Química', 'Mestre', 'Externo'),
+    ('fd2735b3-e953-4a61-8490-4cf5b731f02f', 'Camila Rodrigues', 'camila.rodrigues@ifnmg.com.br', 'Física', 'Doutor', 'Interno'),
+    ('dcd7e012-86a6-437c-b579-59e6b5fdf54b', 'Gabriel Almeida', 'gabriel.almeida@ifnmg.com.br', 'Física Teórica', 'Mestre', 'Externo'),
+    ('e5c4177b-d9c0-44b2-b8e2-724e3b91a462', 'Sofia Mendes', 'sofia.mendes@ifnmg.com.br', 'Otimização Combinatoria', 'Licenciatura', 'Interno');
+
+
