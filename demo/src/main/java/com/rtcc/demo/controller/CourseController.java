@@ -1,9 +1,12 @@
 package com.rtcc.demo.controller;
 
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.rtcc.demo.DTOs.CourseRequestDTO;
 import com.rtcc.demo.DTOs.CourseResponseDTO;
+import com.rtcc.demo.exception.CourseDeletionException;
 import com.rtcc.demo.model.Course;
 import com.rtcc.demo.repository.CourseRepository;
+import com.rtcc.demo.repository.TccRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,6 +27,9 @@ public class CourseController {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private TccRepository tccRepository;
 
 
     @Operation(summary = "Save a new course",
@@ -91,8 +97,15 @@ public class CourseController {
         if (!courseRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
+
+
+        boolean isLinkedToTcc = tccRepository.existsByCourseId(id);
+        if (isLinkedToTcc) {
+            throw new CourseDeletionException("Curso não pode ser deletado pois está vinculado a um TCC");
+        }
+
         courseRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")

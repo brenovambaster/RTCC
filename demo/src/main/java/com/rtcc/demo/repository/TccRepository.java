@@ -41,4 +41,5 @@ public interface TccRepository extends JpaRepository<Tcc, String> {
     @Query("SELECT t FROM Tcc t WHERE LOWER(t.keywords) LIKE LOWER(CONCAT('%', :value, '%'))")
     List<Tcc> searchTccsByKeywords(@Param("value") String value);
 
+    boolean existsByCourseId(String id);
 }
