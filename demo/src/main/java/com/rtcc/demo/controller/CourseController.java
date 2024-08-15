@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.rtcc.demo.DTOs.CourseRequestDTO;
 import com.rtcc.demo.DTOs.CourseResponseDTO;
 import com.rtcc.demo.exception.CourseDeletionException;
+import com.rtcc.demo.exception.EntityDeletionException;
 import com.rtcc.demo.model.Course;
 import com.rtcc.demo.repository.CourseRepository;
 import com.rtcc.demo.repository.TccRepository;
@@ -98,10 +99,9 @@ public class CourseController {
             return ResponseEntity.notFound().build();
         }
 
-
         boolean isLinkedToTcc = tccRepository.existsByCourseId(id);
         if (isLinkedToTcc) {
-            throw new CourseDeletionException("Curso não pode ser deletado pois está vinculado a um TCC");
+            throw new EntityDeletionException("Curso", "Não pode deletar um curso vinculado a um ou vários TCC");
         }
 
         courseRepository.deleteById(id);

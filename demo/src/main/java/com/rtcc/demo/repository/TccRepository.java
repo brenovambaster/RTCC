@@ -42,4 +42,8 @@ public interface TccRepository extends JpaRepository<Tcc, String> {
     List<Tcc> searchTccsByKeywords(@Param("value") String value);
 
     boolean existsByCourseId(String id);
+
+    boolean existsByAdvisorId(String id);
+
+    boolean existsByCommitteeMembersId(String id);
 }
