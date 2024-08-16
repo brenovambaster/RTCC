@@ -1,5 +1,6 @@
 package com.rtcc.demo.model;
 
+import com.rtcc.demo.DTOs.KeywordsRequestDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
