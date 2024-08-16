@@ -14,7 +14,7 @@ public record TccRequestDTO(
         List<String> committeeMembers,
         String summary,
         String abstractText,
-        String keywords,
+        List<String> keywords,
         String pathFile
 ) {
 }

@@ -13,6 +13,6 @@ public record TccResponseDTO(String id,
                              List<ProfessorResponseDTO> committeeMembers,
                              String summary,
                              String abstractText,
-                             String keywords,
+                             List<KeywordsResponseDTO> keywords,
                              String pathFile) {
 }

@@ -5,14 +5,17 @@ import com.rtcc.demo.DTOs.ProfessorResponseDTO;
 import com.rtcc.demo.DTOs.TccRequestDTO;
 import com.rtcc.demo.DTOs.TccResponseDTO;
 import com.rtcc.demo.model.Course;
+import com.rtcc.demo.model.Keywords;
 import com.rtcc.demo.model.Professor;
 import com.rtcc.demo.model.Tcc;
 import com.rtcc.demo.repository.CourseRepository;
+import com.rtcc.demo.repository.KeywordsRepository;
 import com.rtcc.demo.repository.ProfessorRepository;
 import com.rtcc.demo.repository.TccRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import com.rtcc.demo.DTOs.KeywordsResponseDTO;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,6 +35,9 @@ public class TccService {
     @Autowired
     private TccRepository tccRepository;
 
+    @Autowired
+    private KeywordsRepository keywordsRepository;
+
     /**
      * Converte um DTO em uma entidade
      *
@@ -48,9 +54,23 @@ public class TccService {
         List<String> committeeMemberIds = dto.committeeMembers();
         Set<Professor> committeeMembers = new HashSet<>();
 
+        // Verifica se os membros do comitê existem e adiciona à lista
         for (String id : committeeMemberIds) {
-            professorRepository.findById(id).ifPresent(committeeMembers::add);
+            Professor p = professorRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Professor not found"));
+            committeeMembers.add(p);
+
         }
+
+        // Verifica se as palavras-chave existem e adiciona à lista
+        List<String> keywords = dto.keywords();
+        Set<Keywords> keywordsSet = new HashSet<>();
+
+        for (String keyword : keywords) {
+            Keywords k = keywordsRepository.findById(keyword).orElseThrow(() -> new RuntimeException("Keyword not found"));
+            keywordsSet.add(k);
+        }
+
 
         return new Tcc(
                 null,
@@ -64,7 +84,7 @@ public class TccService {
                 committeeMembers,
                 dto.summary(),
                 dto.abstractText(),
-                dto.keywords()
+                keywordsSet
         );
     }
 
@@ -143,7 +163,7 @@ public class TccService {
                 tcc.getCommitteeMembers().stream().map(ProfessorResponseDTO::new).toList(),
                 tcc.getSummary(),
                 tcc.getAbstractText(),
-                tcc.getKeywords(),
+                tcc.getKeywords().stream().map(keyword -> new KeywordsResponseDTO(keyword.getName())).toList(),
                 tcc.getPathFile()
         );
     }

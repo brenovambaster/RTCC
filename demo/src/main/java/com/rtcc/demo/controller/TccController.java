@@ -18,8 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.stream.Collectors;
-
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -69,6 +67,7 @@ public class TccController {
 
             LocalDate defenseDate = LocalDate.parse((String) tccMappedData.get("defenseDate"));
 
+            // EXTRAÇÃO DE DE DADOS DOS MEMBROS DA BANCA
             List<Map<String, String>> committeeMembersList = (List<Map<String, String>>) tccMappedData.get("committeeMembers");
 
             List<String> committeeMembers = (
@@ -76,6 +75,16 @@ public class TccController {
                             .map(member -> member.get("id"))
                             .collect(Collectors.toList())
             );
+
+            // EXTRAÇÃO DE DADOS DAS PALAVRAS-CHAVE
+            List<Map<String, String>> keywordsList = (List<Map<String, String>>) tccMappedData.get("keywords");
+
+            List<String> keywords = (
+                    keywordsList.stream()
+                            .map(member -> member.get("name"))
+                            .collect(Collectors.toList())
+            );
+
 
             TccRequestDTO updatedTccRequestDTO = new TccRequestDTO(
                     tccMappedData.get("title").toString(),
@@ -87,7 +96,7 @@ public class TccController {
                     committeeMembers,
                     tccMappedData.get("summary").toString(),
                     tccMappedData.get("abstractText").toString(),
-                    tccMappedData.get("keywords").toString().replaceAll("\\[|\\]", "").trim(),
+                    keywords,
                     filePath
             );
 
@@ -100,7 +109,6 @@ public class TccController {
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
         } catch (Exception e) {
-            e.printStackTrace(); // Melhor prÃ¡tica: usar um logger para logar erros
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
@@ -171,6 +179,15 @@ public class TccController {
                             .collect(Collectors.toList())
             );
 
+            // EXTRAÇÃO DE DADOS DAS PALAVRAS-CHAVE
+            List<Map<String, String>> keywordsList = (List<Map<String, String>>) tccMappedData.get("keywordsList");
+
+            List<String> keywords = (
+                    keywordsList.stream()
+                            .map(member -> member.get("name"))
+                            .collect(Collectors.toList())
+            );
+
             TccRequestDTO updatedTccRequestDTO = new TccRequestDTO(
                     tccMappedData.get("title").toString(),
                     tccMappedData.get("author").toString(),
@@ -181,7 +198,7 @@ public class TccController {
                     committeeMembers,
                     tccMappedData.get("summary").toString(),
                     tccMappedData.get("abstractText").toString(),
-                    tccMappedData.get("keywords").toString().replaceAll("\\[|\\]", "").trim(),
+                    keywords,
                     tccMappedData.get("pathFile").toString()
             );
 
