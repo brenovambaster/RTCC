@@ -5,7 +5,7 @@ import com.rtcc.demo.DTOs.FilterDTO;
 import com.rtcc.demo.DTOs.TccRequestDTO;
 import com.rtcc.demo.DTOs.TccResponseDTO;
 import com.rtcc.demo.model.Tcc;
-import com.rtcc.demo.service.TccService;
+import com.rtcc.demo.services.TccService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.stream.Collectors;
 
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;

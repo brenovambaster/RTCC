@@ -1,4 +1,4 @@
-package com.rtcc.demo.service;
+package com.rtcc.demo.services;
 
 import com.rtcc.demo.DTOs.CourseResponseDTO;
 import com.rtcc.demo.DTOs.ProfessorResponseDTO;
