@@ -91,7 +91,7 @@ public class CoordinatorController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Void> deleteCoordinator(@PathVariable String id) {
         boolean response = coordinatorService.deleteCoordinatorById(id);
-        if (response) {
+        if (!response) {
             return ResponseEntity.notFound().build();
         }
 
