@@ -2,8 +2,8 @@ package com.rtcc.demo.controller;
 
 import com.rtcc.demo.DTOs.CoordinatorRequestDTO;
 import com.rtcc.demo.DTOs.CoordinatorResponseDTO;
-import com.rtcc.demo.model.Coordinator;
 import com.rtcc.demo.repository.CoordinatorRepository;
+import com.rtcc.demo.services.CoordinatorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +28,8 @@ public class CoordinatorController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    CoordinatorService coordinatorService;
 
 
     @Operation(summary = "Save a new coordinator",
@@ -41,13 +42,7 @@ public class CoordinatorController {
     @PostMapping
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Void> saveCoordinator(@RequestBody CoordinatorRequestDTO data) {
-        Coordinator coordinator = new Coordinator(data);
-
-        String encodedPassword = passwordEncoder.encode(data.password());
-
-        coordinator.setPassword(encodedPassword);
-
-        coordinatorRepository.save(coordinator);
+        coordinatorService.createCoordinator(data);
         return ResponseEntity.ok().build();
     }
 
@@ -61,11 +56,8 @@ public class CoordinatorController {
     @GetMapping
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<CoordinatorResponseDTO>> getAllCoordinators() {
-        List<CoordinatorResponseDTO> coordinatorList = coordinatorRepository.findAll()
-                .stream()
-                .map(CoordinatorResponseDTO::new)
-                .toList();
-        return ResponseEntity.ok(coordinatorList);
+
+        return ResponseEntity.ok(coordinatorService.getAllCoordinators());
     }
 
     @Operation(summary = "Get a coordinator by ID",
@@ -77,15 +69,15 @@ public class CoordinatorController {
     )
     @GetMapping("/{id}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public ResponseEntity<CoordinatorResponseDTO> getCoordinator(@PathVariable String id) {
-        Optional<Coordinator> coordinatorOpt = coordinatorRepository.findById(id);
+    public ResponseEntity<Optional<CoordinatorResponseDTO>> getCoordinator(@PathVariable String id) {
+
+        Optional<CoordinatorResponseDTO> coordinatorOpt = coordinatorService.getCoordinatorById(id);
 
         if (coordinatorOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        CoordinatorResponseDTO coordinatorResponse = new CoordinatorResponseDTO(coordinatorOpt.get());
-        return ResponseEntity.ok(coordinatorResponse);
+        return ResponseEntity.ok(coordinatorOpt);
     }
 
     @Operation(summary = "Delete a coordinator by ID",
@@ -98,10 +90,11 @@ public class CoordinatorController {
     @DeleteMapping("/{id}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Void> deleteCoordinator(@PathVariable String id) {
-        if (!coordinatorRepository.existsById(id)) {
+        boolean response = coordinatorService.deleteCoordinatorById(id);
+        if (response) {
             return ResponseEntity.notFound().build();
         }
-        coordinatorRepository.deleteById(id);
+
         return ResponseEntity.ok().build();
     }
 
@@ -114,24 +107,10 @@ public class CoordinatorController {
                     @ApiResponse(responseCode = "404", description = "Coordinator not found")
             }
     )
-    public ResponseEntity<CoordinatorResponseDTO> updateCoordinator(@PathVariable String id, @RequestBody CoordinatorRequestDTO data) {
-        Optional<Coordinator> coordinatorOptional = coordinatorRepository.findById(id);
+    public ResponseEntity<CoordinatorResponseDTO> updateCoordinator(@PathVariable String id,
+                                                                    @RequestBody CoordinatorRequestDTO data) {
+        Optional<CoordinatorResponseDTO> coordinatorResponse = coordinatorService.updateCoordinator(id, data);
+        return coordinatorResponse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
-        if (coordinatorOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Coordinator coordinator = coordinatorOptional.get();
-
-        coordinator.setName(data.name());
-        coordinator.setEmail(data.email());
-        coordinator.setUsername(data.username());
-        coordinator.setPassword(data.password());
-        coordinator.setCourse(data.course());
-
-        coordinatorRepository.save(coordinator);
-
-        CoordinatorResponseDTO coordinatorResponse = new CoordinatorResponseDTO(coordinator);
-        return ResponseEntity.ok().body(coordinatorResponse);
     }
 }
