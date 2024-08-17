@@ -1,11 +1,9 @@
 package com.rtcc.demo.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rtcc.demo.DTOs.FilterDTO;
 import com.rtcc.demo.DTOs.TccRequestDTO;
 import com.rtcc.demo.DTOs.TccResponseDTO;
-import com.rtcc.demo.model.Keywords;
 import com.rtcc.demo.model.Tcc;
 import com.rtcc.demo.repository.KeywordsRepository;
 import com.rtcc.demo.services.TccService;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.stream.Collectors;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -69,32 +66,12 @@ public class TccController {
 
             LocalDate defenseDate = LocalDate.parse((String) tccMappedData.get("defenseDate"));
 
-            // EXTRAÇÃO DE DE DADOS DOS MEMBROS DA BANCA
-            List<Map<String, String>> committeeMembersList = (List<Map<String, String>>) tccMappedData.get("committeeMembers");
+            List<String> committeeMembers = tccService.extractCommitteeMembers(tccMappedData);
 
-            List<String> committeeMembers = (
-                    committeeMembersList.stream()
-                            .map(member -> member.get("id"))
-                            .collect(Collectors.toList())
-            );
-
-            // EXTRAÇÃO DE DADOS DAS PALAVRAS-CHAVE
-            List<Map<String, String>> keywordsList = (List<Map<String, String>>) tccMappedData.get("keywords");
-
-            List<String> keywords = (
-                    keywordsList.stream()
-                            .map(member -> member.get("name"))
-                            .collect(Collectors.toList())
-            );
-
+            List<String> keywords = tccService.extractKeywords(tccMappedData);
 
             // SALVAR PALAVRAS-CHAVE NO BANCO DE DADOS, CASO ALGUMA DELAS NÃO EXISTAM
-            keywords.forEach(keyword -> {
-                if (!keywordsRepository.existsById(keyword)) {
-                    Keywords newKeyword = new Keywords(keyword);
-                    keywordsRepository.save(newKeyword);
-                }
-            });
+            tccService.saveKeywordsIfNotExists(keywords);
 
             TccRequestDTO updatedTccRequestDTO = new TccRequestDTO(
                     tccMappedData.get("title").toString(),
@@ -174,7 +151,7 @@ public class TccController {
         try {
 
             Optional<Tcc> existingTcc = tccService.findById(id);
-            TccRequestDTO updatedTccRequestDTO = convertJsonToTccRequestDTO(tccData);
+            TccRequestDTO updatedTccRequestDTO = tccService.convertJsonToTccRequestDTO(tccData);
 
 
             if (!tccService.dtoIsValid(updatedTccRequestDTO))
@@ -252,59 +229,5 @@ public class TccController {
         return ResponseEntity.status(HttpStatus.OK).body(tccResponseDTOList);
     }
 
-    private TccRequestDTO convertJsonToTccRequestDTO(String tccData) throws JsonProcessingException {
 
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        Map tccMappedData = mapper.readValue(tccData, Map.class);
-
-        LocalDate defenseDate = LocalDate.parse((String) tccMappedData.get("defenseDate"));
-
-
-        String title = tccMappedData.get("title").toString();
-        String author = tccMappedData.get("author").toString();
-        String course = tccMappedData.get("course").toString();
-        String language = tccMappedData.get("language").toString();
-        String advisor = (String) ((Map<String, Object>) tccMappedData.get("advisor")).get("id");
-        List<Map<String, String>> committeeMembersList = (List<Map<String, String>>) tccMappedData.get("committeeMembers");
-        String summary = tccMappedData.get("summary").toString();
-        String abstractText = tccMappedData.get("abstractText").toString();
-        List<Map<String, String>> keywordsList = (List<Map<String, String>>) tccMappedData.get("keywords");
-        String pathFile = tccMappedData.get("pathFile").toString();
-
-
-        List<String> keywords = (
-                keywordsList.stream()
-                        .map(member -> member.get("name"))
-                        .collect(Collectors.toList())
-        );
-
-        List<String> committeeMembers = (
-                committeeMembersList.stream()
-                        .map(member -> member.get("id"))
-                        .collect(Collectors.toList())
-        );
-
-        // SALVAR PALAVRAS-CHAVE NO BANCO DE DADOS, CASO ALGUMA DELAS NÃO EXISTAM
-        keywords.forEach(keyword -> {
-            if (!keywordsRepository.existsById(keyword)) {
-                Keywords newKeyword = new Keywords(keyword);
-                keywordsRepository.save(newKeyword);
-            }
-        });
-        return new TccRequestDTO(
-                title,
-                author,
-                course,
-                defenseDate,
-                language,
-                advisor,
-                committeeMembers,
-                summary,
-                abstractText,
-                keywords,
-                pathFile
-        );
-    }
 }

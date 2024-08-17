@@ -1,5 +1,7 @@
 package com.rtcc.demo.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rtcc.demo.DTOs.CourseResponseDTO;
 import com.rtcc.demo.DTOs.ProfessorResponseDTO;
 import com.rtcc.demo.DTOs.TccRequestDTO;
@@ -237,5 +239,72 @@ public class TccService {
                     throw new IllegalArgumentException("Filtro inválido: " + filter);
                 }
         ).apply(value);
+    }
+
+    public List<String> extractCommitteeMembers(Map<String, Object> tccMappedData) {
+        List<Map<String, String>> committeeMembersList = (List<Map<String, String>>) tccMappedData.get("committeeMembers");
+        return committeeMembersList.stream()
+                .map(member -> member.get("id"))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> extractKeywords(Map<String, Object> tccMappedData) {
+        List<Map<String, String>> keywordsList = (List<Map<String, String>>) tccMappedData.get("keywords");
+        return keywordsList.stream()
+                .map(keyword -> keyword.get("name"))
+                .collect(Collectors.toList());
+    }
+
+    public TccRequestDTO convertJsonToTccRequestDTO(String tccData) throws JsonProcessingException {
+
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        Map tccMappedData = mapper.readValue(tccData, Map.class);
+
+        LocalDate defenseDate = LocalDate.parse((String) tccMappedData.get("defenseDate"));
+
+
+        String title = tccMappedData.get("title").toString();
+        String author = tccMappedData.get("author").toString();
+        String course = tccMappedData.get("course").toString();
+        String language = tccMappedData.get("language").toString();
+        String advisor = (String) ((Map<String, Object>) tccMappedData.get("advisor")).get("id");
+        List<Map<String, String>> committeeMembersList = (List<Map<String, String>>) tccMappedData.get("committeeMembers");
+        String summary = tccMappedData.get("summary").toString();
+        String abstractText = tccMappedData.get("abstractText").toString();
+        List<Map<String, String>> keywordsList = (List<Map<String, String>>) tccMappedData.get("keywords");
+        String pathFile = tccMappedData.get("pathFile").toString();
+
+
+        List<String> keywords = this.extractKeywords(tccMappedData);
+
+        List<String> committeeMembers = this.extractCommitteeMembers(tccMappedData);
+
+        // SALVAR PALAVRAS-CHAVE NO BANCO DE DADOS, CASO ALGUMA DELAS NÃO EXISTAM
+        saveKeywordsIfNotExists(keywords);
+
+        return new TccRequestDTO(
+                title,
+                author,
+                course,
+                defenseDate,
+                language,
+                advisor,
+                committeeMembers,
+                summary,
+                abstractText,
+                keywords,
+                pathFile
+        );
+    }
+
+    public void saveKeywordsIfNotExists(List<String> keywords) {
+        keywords.forEach(keyword -> {
+            if (!keywordsRepository.existsById(keyword)) {
+                Keywords newKeyword = new Keywords(keyword);
+                keywordsRepository.save(newKeyword);
+            }
+        });
     }
 }
