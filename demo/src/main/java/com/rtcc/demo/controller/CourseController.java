@@ -1,9 +1,7 @@
 package com.rtcc.demo.controller;
 
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.rtcc.demo.DTOs.CourseRequestDTO;
 import com.rtcc.demo.DTOs.CourseResponseDTO;
-import com.rtcc.demo.exception.CourseDeletionException;
 import com.rtcc.demo.exception.EntityDeletionException;
 import com.rtcc.demo.model.Course;
 import com.rtcc.demo.repository.CourseRepository;

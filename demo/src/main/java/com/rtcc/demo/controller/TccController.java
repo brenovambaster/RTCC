@@ -177,7 +177,7 @@ public class TccController {
             );
 
             // EXTRAÇÃO DE DADOS DAS PALAVRAS-CHAVE
-            List<Map<String, String>> keywordsList = (List<Map<String, String>>) tccMappedData.get("keywordsList");
+            List<Map<String, String>> keywordsList = (List<Map<String, String>>) tccMappedData.get("keywords");
 
             List<String> keywords = (
                     keywordsList.stream()
@@ -224,6 +224,7 @@ public class TccController {
             return ResponseEntity.ok().body(tccResponseDTO);
 
         } catch (IOException e) {
+            System.out.println("\n\nMensagem de erro: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
