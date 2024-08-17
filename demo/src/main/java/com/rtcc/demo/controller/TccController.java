@@ -218,6 +218,7 @@ public class TccController {
 
 
     @GetMapping("/filter")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<TccResponseDTO>> filterTccs(@RequestBody FilterDTO filterDTO) {
         String filter = filterDTO.getFilter();
         String value = filterDTO.getValue();
@@ -228,6 +229,4 @@ public class TccController {
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(tccResponseDTOList);
     }
-
-
 }

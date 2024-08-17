@@ -267,7 +267,7 @@ public class TccService {
 
         String title = tccMappedData.get("title").toString();
         String author = tccMappedData.get("author").toString();
-        String course = tccMappedData.get("course").toString();
+        String course = ((Map<String, Object>) tccMappedData.get("course")).get("id").toString();
         String language = tccMappedData.get("language").toString();
         String advisor = (String) ((Map<String, Object>) tccMappedData.get("advisor")).get("id");
         List<Map<String, String>> committeeMembersList = (List<Map<String, String>>) tccMappedData.get("committeeMembers");

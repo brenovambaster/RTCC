@@ -17,8 +17,7 @@ public interface TccRepository extends JpaRepository<Tcc, String> {
             "WHERE LOWER(tcc.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(tcc.author) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(professor.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-            "LOWER(course.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-            "LOWER(tcc.keywords) LIKE LOWER(CONCAT('%', :keyword, '%'))",
+            "LOWER(course.name) LIKE LOWER(CONCAT('%', :keyword, '%'))",
             nativeQuery = true)
     List<Tcc> searchTccs(@Param("keyword") String keyword);
 
