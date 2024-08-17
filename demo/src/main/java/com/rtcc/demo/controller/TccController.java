@@ -28,12 +28,9 @@ import java.util.Optional;
 @RequestMapping("/tcc")
 public class TccController {
 
-    private final TccService tccService;
-
     @Autowired
-    public TccController(TccService tccService) {
-        this.tccService = tccService;
-    }
+    private TccService tccService;
+
 
     @PostMapping
     @CrossOrigin(origins = "*", allowedHeaders = "*")

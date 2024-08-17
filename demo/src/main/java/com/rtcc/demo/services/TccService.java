@@ -12,6 +12,7 @@ import com.rtcc.demo.repository.CourseRepository;
 import com.rtcc.demo.repository.KeywordsRepository;
 import com.rtcc.demo.repository.ProfessorRepository;
 import com.rtcc.demo.repository.TccRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,12 +40,32 @@ public class TccService {
     @Autowired
     private KeywordsRepository keywordsRepository;
 
-    /**
-     * Converte um DTO em uma entidade
-     *
-     * @param dto
-     * @return
-     */
+
+    private Map<String, Function<String, List<Tcc>>> filterStrategies;
+
+
+    @PostConstruct
+    public void init() {
+        this.filterStrategies = Map.of(
+                "title", tccRepository::searchTccsByTitle,
+                "defense_date", value -> tccRepository.searchTccsByDefenseDate(LocalDate.parse(value)),
+                "advisor", tccRepository::searchTccsByAdvisor,
+                "author", tccRepository::searchTccsByAuthor,
+                "course", tccRepository::searchTccsByCourse,
+                "keywords", tccRepository::searchTccsByKeywords,
+                "month_year", value -> {
+                    String[] parts = value.split("_");
+                    int year = Integer.parseInt(parts[0]);
+                    int month = Integer.parseInt(parts[1]);
+                    return tccRepository.searchTccsByMonthYear(year, month);
+                },
+                "year", value -> {
+                    int searchYear = Integer.parseInt(value);
+                    return tccRepository.searchTccsByYear(searchYear);
+                }
+        );
+    }
+
     public Tcc convertDtoToEntity(TccRequestDTO dto) {
         Course course = courseRepository.findById(dto.course())
                 .orElseThrow(() -> new RuntimeException("Course not found"));
@@ -210,22 +232,10 @@ public class TccService {
      * @return List of Tcc
      */
     public List<Tcc> filterTccs(String filter, String value) {
-        switch (filter.toLowerCase()) {
-            case "title":
-                return tccRepository.searchTccsByTitle(value);
-            case "defense_date":
-                return tccRepository.searchTccsByDefenseDate(LocalDate.parse(value));
-            case "advisor":
-                return tccRepository.searchTccsByAdvisor(value);
-            case "author":
-                return tccRepository.searchTccsByAuthor(value);
-            case "course":
-                return tccRepository.searchTccsByCourse(value);
-            case "keywords":
-                return tccRepository.searchTccsByKeywords(value);
-            default:
-                throw new IllegalArgumentException("Filtro inválido: " + filter);
-        }
-
+        return filterStrategies.getOrDefault(filter.toLowerCase(),
+                v -> {
+                    throw new IllegalArgumentException("Filtro inválido: " + filter);
+                }
+        ).apply(value);
     }
 }

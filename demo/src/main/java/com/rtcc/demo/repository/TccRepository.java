@@ -46,4 +46,10 @@ public interface TccRepository extends JpaRepository<Tcc, String> {
     boolean existsByAdvisorId(String id);
 
     boolean existsByCommitteeMembersId(String id);
+
+    @Query("SELECT t FROM Tcc t WHERE EXTRACT(YEAR FROM t.defenseDate) = :year AND EXTRACT(MONTH FROM t.defenseDate) = :month")
+    List<Tcc> searchTccsByMonthYear(@Param("year") int year, @Param("month") int month);
+
+    @Query("SELECT t FROM Tcc t WHERE EXTRACT(YEAR FROM t.defenseDate) = :year")
+    List<Tcc> searchTccsByYear(@Param("year") int year);
 }
