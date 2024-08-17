@@ -1,6 +1,7 @@
 package com.rtcc.demo.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rtcc.demo.DTOs.FilterDTO;
 import com.rtcc.demo.DTOs.TccRequestDTO;
 import com.rtcc.demo.DTOs.TccResponseDTO;
@@ -161,43 +162,7 @@ public class TccController {
         try {
 
             Optional<Tcc> existingTcc = tccService.findById(id);
-
-            ObjectMapper mapper = new ObjectMapper();
-
-            Map<String, Object> tccMappedData = mapper.readValue(tccData, Map.class);
-
-            LocalDate defenseDate = LocalDate.parse((String) tccMappedData.get("defenseDate"));
-
-            List<Map<String, String>> committeeMembersList = (List<Map<String, String>>) tccMappedData.get("committeeMembers");
-
-            List<String> committeeMembers = (
-                    committeeMembersList.stream()
-                            .map(member -> member.get("id"))
-                            .collect(Collectors.toList())
-            );
-
-            // EXTRAÇÃO DE DADOS DAS PALAVRAS-CHAVE
-            List<Map<String, String>> keywordsList = (List<Map<String, String>>) tccMappedData.get("keywords");
-
-            List<String> keywords = (
-                    keywordsList.stream()
-                            .map(member -> member.get("name"))
-                            .collect(Collectors.toList())
-            );
-
-            TccRequestDTO updatedTccRequestDTO = new TccRequestDTO(
-                    tccMappedData.get("title").toString(),
-                    tccMappedData.get("author").toString(),
-                    (String) ((Map<String, Object>) tccMappedData.get("course")).get("id"),
-                    defenseDate,
-                    tccMappedData.get("language").toString(),
-                    (String) ((Map<String, Object>) tccMappedData.get("advisor")).get("id"),
-                    committeeMembers,
-                    tccMappedData.get("summary").toString(),
-                    tccMappedData.get("abstractText").toString(),
-                    keywords,
-                    tccMappedData.get("pathFile").toString()
-            );
+            TccRequestDTO updatedTccRequestDTO = convertJsonToTccRequestDTO(tccData);
 
             if (!tccService.dtoIsValid(updatedTccRequestDTO))
                 return ResponseEntity.badRequest().build();
@@ -222,6 +187,7 @@ public class TccController {
             TccResponseDTO tccResponseDTO = tccService.convertToResponseDTO(tcc);
 
             return ResponseEntity.ok().body(tccResponseDTO);
+
 
         } catch (IOException e) {
             System.out.println("\n\nMensagem de erro: " + e.getMessage());
@@ -273,4 +239,52 @@ public class TccController {
         return ResponseEntity.status(HttpStatus.OK).body(tccResponseDTOList);
     }
 
+    private TccRequestDTO convertJsonToTccRequestDTO(String tccData) throws JsonProcessingException {
+
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        Map tccMappedData = mapper.readValue(tccData, Map.class);
+
+        LocalDate defenseDate = LocalDate.parse((String) tccMappedData.get("defenseDate"));
+
+
+        String title = tccMappedData.get("title").toString();
+        String author = tccMappedData.get("author").toString();
+        String course = tccMappedData.get("course").toString();
+        String language = tccMappedData.get("language").toString();
+        String advisor = (String) ((Map<String, Object>) tccMappedData.get("advisor")).get("id");
+        List<Map<String, String>> committeeMembersList = (List<Map<String, String>>) tccMappedData.get("committeeMembers");
+        String summary = tccMappedData.get("summary").toString();
+        String abstractText = tccMappedData.get("abstractText").toString();
+        List<Map<String, String>> keywordsList = (List<Map<String, String>>) tccMappedData.get("keywords");
+        String pathFile = tccMappedData.get("pathFile").toString();
+
+
+        List<String> keywords = (
+                keywordsList.stream()
+                        .map(member -> member.get("name"))
+                        .collect(Collectors.toList())
+        );
+
+        List<String> committeeMembers = (
+                committeeMembersList.stream()
+                        .map(member -> member.get("id"))
+                        .collect(Collectors.toList())
+        );
+
+        return new TccRequestDTO(
+                title,
+                author,
+                course,
+                defenseDate,
+                language,
+                advisor,
+                committeeMembers,
+                summary,
+                abstractText,
+                keywords,
+                pathFile
+        );
+    }
 }
