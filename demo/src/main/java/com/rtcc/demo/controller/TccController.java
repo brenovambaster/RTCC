@@ -5,7 +5,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rtcc.demo.DTOs.FilterDTO;
 import com.rtcc.demo.DTOs.TccRequestDTO;
 import com.rtcc.demo.DTOs.TccResponseDTO;
+import com.rtcc.demo.model.Keywords;
 import com.rtcc.demo.model.Tcc;
+import com.rtcc.demo.repository.KeywordsRepository;
 import com.rtcc.demo.services.TccService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,6 +33,8 @@ public class TccController {
 
     @Autowired
     private TccService tccService;
+    @Autowired
+    private KeywordsRepository keywordsRepository;
 
 
     @PostMapping
@@ -83,6 +87,14 @@ public class TccController {
                             .collect(Collectors.toList())
             );
 
+
+            // SALVAR PALAVRAS-CHAVE NO BANCO DE DADOS, CASO ALGUMA DELAS NÃO EXISTAM
+            keywords.forEach(keyword -> {
+                if (!keywordsRepository.existsById(keyword)) {
+                    Keywords newKeyword = new Keywords(keyword);
+                    keywordsRepository.save(newKeyword);
+                }
+            });
 
             TccRequestDTO updatedTccRequestDTO = new TccRequestDTO(
                     tccMappedData.get("title").toString(),
@@ -163,6 +175,7 @@ public class TccController {
 
             Optional<Tcc> existingTcc = tccService.findById(id);
             TccRequestDTO updatedTccRequestDTO = convertJsonToTccRequestDTO(tccData);
+
 
             if (!tccService.dtoIsValid(updatedTccRequestDTO))
                 return ResponseEntity.badRequest().build();
@@ -273,6 +286,13 @@ public class TccController {
                         .collect(Collectors.toList())
         );
 
+        // SALVAR PALAVRAS-CHAVE NO BANCO DE DADOS, CASO ALGUMA DELAS NÃO EXISTAM
+        keywords.forEach(keyword -> {
+            if (!keywordsRepository.existsById(keyword)) {
+                Keywords newKeyword = new Keywords(keyword);
+                keywordsRepository.save(newKeyword);
+            }
+        });
         return new TccRequestDTO(
                 title,
                 author,
