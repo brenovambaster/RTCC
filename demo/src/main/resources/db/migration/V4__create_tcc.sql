@@ -20,7 +20,7 @@ CREATE TABLE tcc_committee_members
     tcc_id       TEXT NOT NULL,
     professor_id TEXT NOT NULL,
     CONSTRAINT pk_tcc_committee PRIMARY KEY (tcc_id, professor_id),
-    CONSTRAINT fk_tcc FOREIGN KEY (tcc_id) REFERENCES tcc (id),
+    CONSTRAINT fk_tcc FOREIGN KEY (tcc_id) REFERENCES tcc (id) ON DELETE CASCADE,
     CONSTRAINT fk_professor FOREIGN KEY (professor_id) REFERENCES professor (id)
 );
 
@@ -37,6 +37,6 @@ CREATE TABLE tcc_keywords
     tcc_id       TEXT         NOT NULL,
     keyword_name VARCHAR(255) NOT NULL,
     CONSTRAINT pk_tcc_keywords PRIMARY KEY (tcc_id, keyword_name),
-    CONSTRAINT fk_tcc FOREIGN KEY (tcc_id) REFERENCES tcc (id),
+    CONSTRAINT fk_tcc FOREIGN KEY (tcc_id) REFERENCES tcc (id) ON DELETE CASCADE,
     CONSTRAINT fk_keyword FOREIGN KEY (keyword_name) REFERENCES keywords (name)
 );
