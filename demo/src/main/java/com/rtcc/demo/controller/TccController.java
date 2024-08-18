@@ -221,7 +221,7 @@ public class TccController {
     }
 
 
-    @GetMapping("/filter")
+    @PostMapping("/filter")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<TccResponseDTO>> filterTccs(@RequestBody FilterDTO filterDTO) {
         String filter = filterDTO.getFilter();
