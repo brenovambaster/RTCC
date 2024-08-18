@@ -307,4 +307,8 @@ public class TccService {
             }
         });
     }
+
+    public Path getFilePath(String filename) {
+        return Paths.get("uploads").resolve(filename).normalize();
+    }
 }
