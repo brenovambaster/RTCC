@@ -5,11 +5,15 @@ import com.rtcc.demo.DTOs.FilterDTO;
 import com.rtcc.demo.DTOs.TccRequestDTO;
 import com.rtcc.demo.DTOs.TccResponseDTO;
 import com.rtcc.demo.model.Tcc;
-import com.rtcc.demo.service.TccService;
+import com.rtcc.demo.repository.KeywordsRepository;
+import com.rtcc.demo.services.TccService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.stream.Collectors;
-
-
-import javax.validation.Valid;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +32,11 @@ import java.util.Optional;
 @RequestMapping("/tcc")
 public class TccController {
 
-    private final TccService tccService;
-
     @Autowired
-    public TccController(TccService tccService) {
-        this.tccService = tccService;
-    }
+    private TccService tccService;
+    @Autowired
+    private KeywordsRepository keywordsRepository;
+
 
     @PostMapping
     @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -70,13 +70,12 @@ public class TccController {
 
             LocalDate defenseDate = LocalDate.parse((String) tccMappedData.get("defenseDate"));
 
-            List<Map<String, String>> committeeMembersList = (List<Map<String, String>>) tccMappedData.get("committeeMembers");
+            List<String> committeeMembers = tccService.extractCommitteeMembers(tccMappedData);
 
-            List<String> committeeMembers = (
-                    committeeMembersList.stream()
-                            .map(member -> member.get("id"))
-                            .collect(Collectors.toList())
-            );
+            List<String> keywords = tccService.extractKeywords(tccMappedData);
+
+            // SALVAR PALAVRAS-CHAVE NO BANCO DE DADOS, CASO ALGUMA DELAS NÃO EXISTAM
+            tccService.saveKeywordsIfNotExists(keywords);
 
             TccRequestDTO updatedTccRequestDTO = new TccRequestDTO(
                     tccMappedData.get("title").toString(),
@@ -88,7 +87,7 @@ public class TccController {
                     committeeMembers,
                     tccMappedData.get("summary").toString(),
                     tccMappedData.get("abstractText").toString(),
-                    tccMappedData.get("keywords").toString().replaceAll("\\[|\\]", "").trim(),
+                    keywords,
                     filePath
             );
 
@@ -101,7 +100,6 @@ public class TccController {
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
         } catch (Exception e) {
-            e.printStackTrace(); // Melhor prÃ¡tica: usar um logger para logar erros
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
@@ -157,34 +155,8 @@ public class TccController {
         try {
 
             Optional<Tcc> existingTcc = tccService.findById(id);
+            TccRequestDTO updatedTccRequestDTO = tccService.convertJsonToTccRequestDTO(tccData);
 
-            ObjectMapper mapper = new ObjectMapper();
-
-            Map<String, Object> tccMappedData = mapper.readValue(tccData, Map.class);
-
-            LocalDate defenseDate = LocalDate.parse((String) tccMappedData.get("defenseDate"));
-
-            List<Map<String, String>> committeeMembersList = (List<Map<String, String>>) tccMappedData.get("committeeMembers");
-
-            List<String> committeeMembers = (
-                    committeeMembersList.stream()
-                            .map(member -> member.get("id"))
-                            .collect(Collectors.toList())
-            );
-
-            TccRequestDTO updatedTccRequestDTO = new TccRequestDTO(
-                    tccMappedData.get("title").toString(),
-                    tccMappedData.get("author").toString(),
-                    (String) ((Map<String, Object>) tccMappedData.get("course")).get("id"),
-                    defenseDate,
-                    tccMappedData.get("language").toString(),
-                    (String) ((Map<String, Object>) tccMappedData.get("advisor")).get("id"),
-                    committeeMembers,
-                    tccMappedData.get("summary").toString(),
-                    tccMappedData.get("abstractText").toString(),
-                    tccMappedData.get("keywords").toString().replaceAll("\\[|\\]", "").trim(),
-                    tccMappedData.get("pathFile").toString()
-            );
 
             if (!tccService.dtoIsValid(updatedTccRequestDTO))
                 return ResponseEntity.badRequest().build();
@@ -210,7 +182,9 @@ public class TccController {
 
             return ResponseEntity.ok().body(tccResponseDTO);
 
+
         } catch (IOException e) {
+            System.out.println("\n\nMensagem de erro: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -247,7 +221,8 @@ public class TccController {
     }
 
 
-    @GetMapping("/filter")
+    @PostMapping("/filter")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<TccResponseDTO>> filterTccs(@RequestBody FilterDTO filterDTO) {
         String filter = filterDTO.getFilter();
         String value = filterDTO.getValue();
@@ -259,4 +234,22 @@ public class TccController {
         return ResponseEntity.status(HttpStatus.OK).body(tccResponseDTOList);
     }
 
+    @GetMapping("/view/{filename}")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity<Resource> viewFile(@PathVariable String filename) {
+        try {
+            Path filePath = tccService.getFilePath(filename);
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_TYPE, "application/pdf")
+                        .body(resource);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

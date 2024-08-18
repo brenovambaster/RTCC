@@ -5,4 +5,5 @@ import com.rtcc.demo.model.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CoordinatorRepository extends JpaRepository<Coordinator, String> {
+    boolean existsByCourseId(String id);
 }

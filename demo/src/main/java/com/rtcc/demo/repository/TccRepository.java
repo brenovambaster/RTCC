@@ -17,8 +17,7 @@ public interface TccRepository extends JpaRepository<Tcc, String> {
             "WHERE LOWER(tcc.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(tcc.author) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(professor.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-            "LOWER(course.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-            "LOWER(tcc.keywords) LIKE LOWER(CONCAT('%', :keyword, '%'))",
+            "LOWER(course.name) LIKE LOWER(CONCAT('%', :keyword, '%'))",
             nativeQuery = true)
     List<Tcc> searchTccs(@Param("keyword") String keyword);
 
@@ -38,7 +37,19 @@ public interface TccRepository extends JpaRepository<Tcc, String> {
     @Query("SELECT t FROM Tcc t WHERE LOWER(t.course) = :value")
     List<Tcc> searchTccsByCourse(@Param("value") String courseId);
 
-    @Query("SELECT t FROM Tcc t WHERE LOWER(t.keywords) LIKE LOWER(CONCAT('%', :value, '%'))")
+
+    @Query("SELECT t FROM Tcc t JOIN t.keywords k WHERE LOWER(k.name) LIKE LOWER(CONCAT('%', :value, '%'))")
     List<Tcc> searchTccsByKeywords(@Param("value") String value);
 
+    boolean existsByCourseId(String id);
+
+    boolean existsByAdvisorId(String id);
+
+    boolean existsByCommitteeMembersId(String id);
+
+    @Query("SELECT t FROM Tcc t WHERE EXTRACT(YEAR FROM t.defenseDate) = :year AND EXTRACT(MONTH FROM t.defenseDate) = :month")
+    List<Tcc> searchTccsByMonthYear(@Param("year") int year, @Param("month") int month);
+
+    @Query("SELECT t FROM Tcc t WHERE EXTRACT(YEAR FROM t.defenseDate) = :year")
+    List<Tcc> searchTccsByYear(@Param("year") int year);
 }

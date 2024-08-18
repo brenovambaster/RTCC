@@ -14,20 +14,24 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Coordinator {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
-    String name;
-    String email;
-    String username;
-    String password;
-    String course;
+    private String id;
+    private String name;
+    private String email;
+    private String username;
+    private String password;
 
-    public Coordinator(CoordinatorRequestDTO coordinatorRequestDTO) {
-        this.name = coordinatorRequestDTO.name();
-        this.email = coordinatorRequestDTO.email();
-        this.username = coordinatorRequestDTO.username();
-        this.password = coordinatorRequestDTO.password();
-        this.course = coordinatorRequestDTO.course();
+    @OneToOne
+    @JoinColumn(name = "course")
+    private Course course;
+
+    public Coordinator(String name, String email, String username, String password, Course course) {
+        this.name = name;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.course = course;
     }
 }

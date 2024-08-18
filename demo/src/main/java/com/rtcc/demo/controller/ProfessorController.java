@@ -2,8 +2,10 @@ package com.rtcc.demo.controller;
 
 import com.rtcc.demo.DTOs.ProfessorRequestDTO;
 import com.rtcc.demo.DTOs.ProfessorResponseDTO;
+import com.rtcc.demo.exception.EntityDeletionException;
 import com.rtcc.demo.model.Professor;
 import com.rtcc.demo.repository.ProfessorRepository;
+import com.rtcc.demo.repository.TccRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,6 +23,8 @@ public class ProfessorController {
 
     @Autowired
     private ProfessorRepository professorRepository;
+    @Autowired
+    private TccRepository tccRepository;
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
@@ -107,6 +111,13 @@ public class ProfessorController {
             })
     public ResponseEntity<Void> deleteProfessor(@PathVariable String id) {
         if (professorRepository.existsById(id)) {
+
+            boolean isLinkedToTcc = tccRepository.existsByCommitteeMembersId(id) || tccRepository.existsByAdvisorId(id);
+
+            if (isLinkedToTcc) {
+                throw new EntityDeletionException("Professor", "Não pode deletar um professor vinculado a um ou vários TCC");
+            }
+
             professorRepository.deleteById(id);
             return ResponseEntity.noContent().build(); // Retornar 204 No Content
         } else {

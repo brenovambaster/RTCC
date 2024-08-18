@@ -58,6 +58,12 @@ public class Tcc {
     @Column(columnDefinition = "TEXT", name = "abstract")
     private String abstractText;
 
-    @Column(columnDefinition = "TEXT")
-    private String keywords;
+    @ManyToMany
+    @JoinTable(
+            name = "tcc_keywords",
+            joinColumns = @JoinColumn(name = "tcc_id"),
+            inverseJoinColumns = @JoinColumn(name = "keyword_name")
+    )
+    private Set<Keywords> keywords = new HashSet<>();
+
 }
