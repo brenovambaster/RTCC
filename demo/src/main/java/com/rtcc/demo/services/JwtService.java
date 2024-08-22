@@ -39,6 +39,7 @@ public class JwtService {
                 .expiresAt(now.plusSeconds(expiry))
                 .subject(authentication.getName())
                 .claim("scope", scopes)
+                .claim("user_name", authentication.getName())
                 .build();
         return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

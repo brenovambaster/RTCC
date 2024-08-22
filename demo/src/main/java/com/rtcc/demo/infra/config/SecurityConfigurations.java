@@ -23,7 +23,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -41,19 +40,35 @@ public class SecurityConfigurations {
     @Value("${jwt.public.key}")
     private RSAPublicKey publicKey;
 
+    private static final String ROLE_ADMIN = UserRole.ADMIN.getRole();
+    private static final String ROLE_COORDINATOR = UserRole.COORDINATOR.getRole();
+    private static final String ROLE_USER = UserRole.USER.getRole();
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/coordinator").hasAnyRole("ADMIN")
-                        .requestMatchers("/course").hasRole("COORDINATOR")
-                        .requestMatchers(HttpMethod.POST, "/tcc").hasRole("COORDINATOR")
-                        .requestMatchers(HttpMethod.PUT, "/tcc").hasRole("COORDINATOR")
-                        .requestMatchers(HttpMethod.DELETE, "/tcc").hasRole("COORDINATOR")
-                        .requestMatchers("/authenticate").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/tcc").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/coordinator/{id}").hasRole(ROLE_COORDINATOR)
+                        .requestMatchers(HttpMethod.PUT, "/coordinator/password/{id}").hasRole(ROLE_COORDINATOR)
+                        .requestMatchers("/coordinator", "/coordinator/{id}").hasRole(ROLE_ADMIN)
 
+
+                        .requestMatchers(HttpMethod.GET, "/course/{id}", "/course").permitAll()
+                        .requestMatchers("/course", "/course/{id}").hasRole(ROLE_COORDINATOR)
+
+                        .requestMatchers(HttpMethod.GET, "/professor/{id}", "/professor").permitAll()
+                        .requestMatchers("/professor", "professor/{id}").hasRole(ROLE_COORDINATOR)
+
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/tcc/{id}", "/tcc", "/tcc/search",
+                                "tcc/view/{filename}", "tcc/filter").permitAll()
+
+                        .requestMatchers("/tcc", "/tcc/{id}").hasRole(ROLE_COORDINATOR)
+
+
+                        .requestMatchers("/authenticate").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
