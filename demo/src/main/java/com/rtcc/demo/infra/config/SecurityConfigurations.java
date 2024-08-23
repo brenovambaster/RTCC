@@ -42,7 +42,7 @@ public class SecurityConfigurations {
 
     private static final String ROLE_ADMIN = UserRole.ADMIN.getRole();
     private static final String ROLE_COORDINATOR = UserRole.COORDINATOR.getRole();
-    private static final String ROLE_USER = UserRole.USER.getRole();
+    private static final String ROLE_ACADEMIC = UserRole.ACADEMIC.getRole();
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -63,8 +63,9 @@ public class SecurityConfigurations {
 
                         .requestMatchers(HttpMethod.GET,
                                 "/tcc/{id}", "/tcc", "/tcc/search",
-                                "tcc/view/{filename}", "tcc/filter").permitAll()
+                                "tcc/view/{filename}", "tcc/search/").permitAll()
 
+                        .requestMatchers(HttpMethod.POST, "tcc/filter", "tcc/search/").permitAll()
                         .requestMatchers("/tcc", "/tcc/{id}").hasRole(ROLE_COORDINATOR)
 
 

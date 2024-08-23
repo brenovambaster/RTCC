@@ -1,6 +1,5 @@
 package com.rtcc.demo.model;
 
-import com.rtcc.demo.DTOs.CoordinatorRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,22 +15,18 @@ import lombok.Setter;
 public class Coordinator {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String name;
-    private String email;
-    private String username;
-    private String password;
 
     @OneToOne
-    @JoinColumn(name = "course")
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToOne
+    @JoinColumn(name = "course_id")
     private Course course;
 
-    public Coordinator(String name, String email, String username, String password, Course course) {
-        this.name = name;
-        this.email = email;
-        this.username = username;
-        this.password = password;
+    public Coordinator(User user, Course course) {
+        this.user = user;
         this.course = course;
     }
 }

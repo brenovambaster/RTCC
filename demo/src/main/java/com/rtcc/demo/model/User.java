@@ -17,10 +17,16 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String username;
+    private String name;
     private String password;
     private String email;
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    public User(String name, String email, String encode) {
+        this.name = name;
+        this.email = email;
+        this.password = encode;
+        this.role = UserRole.COORDINATOR;
+    }
 }

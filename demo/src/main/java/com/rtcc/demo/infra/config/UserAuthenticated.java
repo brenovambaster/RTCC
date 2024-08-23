@@ -25,17 +25,17 @@ public class UserAuthenticated implements UserDetails {
             return List.of(
                     new SimpleGrantedAuthority(UserRole.ADMIN.getRole()),
                     new SimpleGrantedAuthority(UserRole.COORDINATOR.getRole()),
-                    new SimpleGrantedAuthority(UserRole.USER.getRole())
+                    new SimpleGrantedAuthority(UserRole.ACADEMIC.getRole())
             );
         }
         if (user.getRole() == UserRole.COORDINATOR) {
             return List.of(
                     new SimpleGrantedAuthority(UserRole.COORDINATOR.getRole()),
-                    new SimpleGrantedAuthority(UserRole.USER.getRole())
+                    new SimpleGrantedAuthority(UserRole.ACADEMIC.getRole())
             );
         }
 
-        return List.of(new SimpleGrantedAuthority(UserRole.USER.getRole()));
+        return List.of(new SimpleGrantedAuthority(UserRole.ACADEMIC.getRole()));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class UserAuthenticated implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.getEmail();
     }
 
     @Override

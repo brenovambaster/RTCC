@@ -4,15 +4,6 @@ VALUES ('a4d2f1f3-75e0-4e9a-b0d3-2a7262cf564f', 'Ciência da Computação', 'CC0
        ('f7b7b3a0-3b68-4f69-a5c2-3b5c9825d451', 'Engenharia Química', 'EQ01');
 
 
-INSERT INTO coordinator (id, name, email, username, password, course)
-VALUES ('6c4f8d6e-1d2e-4b6c-b8b5-58b13ed6a6d1', 'João Silva', 'joao.silva@ifnmg.com.br', 'joao',
-        '$2a$10$K6S6KiRtJ66uSFI8ewtYc.ihA4x/fMI3ErYr/ZG9PFAcAlrCqRxG.', 'a4d2f1f3-75e0-4e9a-b0d3-2a7262cf564f'),
-       ('b287c44b-5aaf-45e3-8e14-0cfcff5b686b', 'Mariana Costa', 'mariana.costa@ifnmg.com.br', 'mariana',
-        '$2a$10$C7h7EFiFJ8JkG8z.E/5u6OXZj/cX0BThw/8cz7Tr3ocMy7GFuLp2K', 'e564e6b4-7c92-4d3e-b0e2-d2c6b9a16c76'),
-       ('c847d22f-8c7d-4e62-8321-e606d6caa0a4', 'Pedro Lima', 'pedro.lima@ifnmg.com.br', 'pedro',
-        '$2a$10$K9VfDRouOB.tV9g6m9RlyOJ2.rffN1mdf88gyS2bMa/Uo1d6fTceO', 'f7b7b3a0-3b68-4f69-a5c2-3b5c9825d451');
-
-
 INSERT INTO professor (id, name, email, research_area, title, location_of_work)
 VALUES ('d5a4b637-6299-4f87-900d-89b23a6b7c8a', 'Ana Beatriz Silva', 'ana.silva@ifnmg.com.br', 'Matematica', 'Doutor',
         'Interno'),
