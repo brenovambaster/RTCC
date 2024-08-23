@@ -55,7 +55,7 @@ public class SecurityConfigurations {
 
 
                         .requestMatchers(HttpMethod.GET, "/course/{id}", "/course").permitAll()
-                        .requestMatchers("/course", "/course/{id}").hasRole(ROLE_COORDINATOR)
+                        .requestMatchers("/course", "/course/{id}").hasRole(ROLE_ADMIN)
 
                         .requestMatchers(HttpMethod.GET, "/professor/{id}").permitAll()
                         .requestMatchers("/professor", "professor/{id}").hasRole(ROLE_COORDINATOR)

@@ -1,6 +1,5 @@
 package com.rtcc.demo.services;
 
-import com.nimbusds.jwt.JWTClaimsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.stream.Collectors;
-
-import static java.rmi.server.LogStream.log;
 
 
 @Service
