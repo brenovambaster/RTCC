@@ -1,11 +1,13 @@
 drop table if exists users;
 create table users
 (
-    id       varchar(36)                                   not null primary key,
-    name     varchar(50)                                   not null,
-    password varchar(255)                                  not null,
-    email    varchar(100)                                  not null unique,
-    role     varchar(50) default 'USER'::character varying not null
+    id                 varchar(36)                                   not null primary key,
+    name               varchar(50)                                   not null,
+    password           varchar(255)                                  not null,
+    email              varchar(100)                                  not null unique,
+    role               varchar(50) default 'USER'::character varying not null,
+    email_verified     boolean     default false                     not null,
+    verification_token varchar(512)
 );
 
 alter table users

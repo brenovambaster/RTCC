@@ -6,7 +6,7 @@ public class CheckDataCoordinator {
     /**
      * Check if the data is valid for creating a coordinator
      *
-     * @param data
+     * @param data CoordinatorRequestDTO
      */
     public static void checkDataCreate(CoordinatorRequestDTO data) {
         if (data == null || data.course() == null || data.password() == null || data.name() == null || data.email() == null) {
@@ -17,7 +17,7 @@ public class CheckDataCoordinator {
     /**
      * Check if the data is valid for updating a coordinator
      *
-     * @param data
+     * @param data CoordinatorRequestDTO
      */
     public static void checkDataUpdate(CoordinatorRequestDTO data) {
         if (data == null || data.course() == null || data.name() == null || data.email() == null) {

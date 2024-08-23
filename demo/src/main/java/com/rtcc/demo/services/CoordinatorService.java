@@ -11,6 +11,8 @@ import com.rtcc.demo.repository.CoordinatorRepository;
 import com.rtcc.demo.repository.CourseRepository;
 import com.rtcc.demo.repository.UserRepository;
 import com.rtcc.demo.util.CheckDataCoordinator;
+import com.rtcc.demo.util.TokenGenerator;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,38 +36,46 @@ public class CoordinatorService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EmailService emailService;
 
 
     @Transactional
-    public void createCoordinator(CoordinatorRequestDTO data) {
+    public void createCoordinator(CoordinatorRequestDTO data) throws MessagingException {
         Logger logger = LoggerFactory.getLogger(CoordinatorService.class);
         logger.info("------Creating coordinator: {}", data);
 
-
+        // Validação dos dados do coordenador
         CheckDataCoordinator.checkDataCreate(data);
 
+        // Busca o curso e trata o erro se o curso não for encontrado
         Course course = courseRepository.findById(data.course())
-                .orElseThrow(() -> new EntityNotFoundException("Course: ", data.course()));
+                .orElseThrow(() -> new EntityNotFoundException("Course ", data.course()));
 
+        // Codifica a senha
         String encodedPassword = passwordEncoder.encode(data.password());
 
-        User user = new User(
-                data.name(),
-                data.email(),
-                encodedPassword
-        );
+        // Cria o usuário
+        User user = new User(data.name(), data.email(), encodedPassword);
+        user.setVerificationToken(TokenGenerator.generateVerificationToken());
+
+        // Salva o usuário no banco de dados
         User savedUser = userRepository.save(user);
 
-        logger.info("User: {}", user.getId());
-        Coordinator coordinator = new Coordinator(
-                savedUser,
-                course
-        );
+        logger.info("User created with ID: {}", savedUser.getId());
 
-        // Define o ID do coordenador para ser o mesmo ID do usuário
+        // Cria o coordenador associando ao curso e usuário criado
+        Coordinator coordinator = new Coordinator(savedUser, course);
         coordinator.setId(savedUser.getId());
-
         coordinatorRepository.save(coordinator);
+
+        // Envio de e-mail de verificação fora da transação
+        try {
+            emailService.sendVerificationEmail(savedUser);
+        } catch (MessagingException e) {
+            logger.error("Error sending email: {}", e.getMessage());
+            throw new MessagingException("Coordinator created but failed to send verification email: " + e.getMessage());
+        }
     }
 
     public List<CoordinatorResponseDTO> getAllCoordinators() {
@@ -88,15 +98,16 @@ public class CoordinatorService {
     public boolean deleteCoordinatorById(String id) {
         if (coordinatorRepository.existsById(id)) {
             coordinatorRepository.deleteById(id);
+            userRepository.deleteById(id);
             return true;
         }
         return false;
     }
 
     public Optional<CoordinatorResponseDTO> updateCoordinator(String id, CoordinatorRequestDTO data) {
-        CheckDataCoordinator.checkDataUpdate(data);
-        return coordinatorRepository.findById(id).map(coordinator -> {
 
+        return coordinatorRepository.findById(id).map(coordinator -> {
+//            CheckDataCoordinator.checkDataUpdate(data);
             Course course = courseRepository.findById(data.course())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid course ID: " + data.course()));
 

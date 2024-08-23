@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            background-color: #007bff;
+            padding: 10px;
+            color: #ffffff;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            color: #777777;
+            margin-top: 20px;
+        }
+
+        .footer img {
+            margin-right: 10px; /* Espaço entre a imagem e o texto */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 th:text="${subject}">Título</h1>
+    </div>
+    <div class="content">
+        <h3>
+            <p th:utext="${message}">Corpo da mensagem</p>
+        </h3>
+    </div>
+    <p>Este e-mail foi gerado automaticamente pelo nosso sistema. Por favor, não responda-o.</p>
+    <p>Atenciosamente,</p>
+    <div class="footer">
+        <img src="https://github.com/brenovambaster/front-end-2/blob/main/public/nova-logo-rtcc-if-logo.png?raw=true"
+             width="15%" height="15%">
+        <p>&copy;<strong> 2024 RTCC-IF. All rights reserved. </strong></p>
+    </div>
+</div>
+</body>
+</html>

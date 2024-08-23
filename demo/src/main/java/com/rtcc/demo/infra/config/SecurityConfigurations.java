@@ -68,6 +68,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST, "tcc/filter", "tcc/search/").permitAll()
                         .requestMatchers("/tcc", "/tcc/{id}").hasRole(ROLE_COORDINATOR)
 
+                        .requestMatchers("/verify-email").permitAll()
 
                         .requestMatchers("/authenticate").permitAll()
                         .anyRequest().authenticated()

@@ -23,6 +23,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+
+    @Column(name = "email_verified")
+    private boolean emailVerified = false;  // Campo para verificar o email
+
+    @Column(name = "verification_token")
+    private String verificationToken;  // Token temporário para verificação
+
     public User(String name, String email, String encode) {
         this.name = name;
         this.email = email;
