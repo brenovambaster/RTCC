@@ -2,6 +2,7 @@ package com.rtcc.demo.controller;
 
 import com.rtcc.demo.services.AuthenticationService;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ public class AuthenticationController {
     }
 
     @PostMapping
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public String Authenticate(Authentication authentication) {
         return authenticationService.authenticate(authentication);
     }

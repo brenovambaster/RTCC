@@ -4,6 +4,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import lombok.RequiredArgsConstructor;
 import com.nimbusds.jose.jwk.RSAKey;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,9 +41,11 @@ public class SecurityConfigurations {
     @Value("${jwt.public.key}")
     private RSAPublicKey publicKey;
 
+
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private static final String ROLE_ADMIN = UserRole.ADMIN.getRole();
     private static final String ROLE_COORDINATOR = UserRole.COORDINATOR.getRole();
-    private static final String ROLE_USER = UserRole.USER.getRole();
+    private static final String ROLE_ACADEMIC = UserRole.ACADEMIC.getRole();
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -50,27 +53,34 @@ public class SecurityConfigurations {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/coordinator/{id}").hasRole(ROLE_COORDINATOR)
-                        .requestMatchers(HttpMethod.PUT, "/coordinator/password/{id}").hasRole(ROLE_COORDINATOR)
+                        .requestMatchers(HttpMethod.PUT, "/coordinator/password/{id}").hasRole(ROLE_ADMIN)
                         .requestMatchers("/coordinator", "/coordinator/{id}").hasRole(ROLE_ADMIN)
 
 
                         .requestMatchers(HttpMethod.GET, "/course/{id}", "/course").permitAll()
-                        .requestMatchers("/course", "/course/{id}").hasRole(ROLE_COORDINATOR)
+                        .requestMatchers("/course", "/course/{id}").hasRole(ROLE_ADMIN)
 
-                        .requestMatchers(HttpMethod.GET, "/professor/{id}", "/professor").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/professor/{id}").permitAll()
                         .requestMatchers("/professor", "professor/{id}").hasRole(ROLE_COORDINATOR)
 
 
                         .requestMatchers(HttpMethod.GET,
                                 "/tcc/{id}", "/tcc", "/tcc/search",
-                                "tcc/view/{filename}", "tcc/filter").permitAll()
+                                "tcc/view/{filename}", "tcc/search/").permitAll()
 
+                        .requestMatchers(HttpMethod.POST, "tcc/filter", "tcc/search/").permitAll()
                         .requestMatchers("/tcc", "/tcc/{id}").hasRole(ROLE_COORDINATOR)
 
+                        .requestMatchers("/verify-email").permitAll()
 
                         .requestMatchers("/authenticate").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/academic").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
                         .anyRequest().authenticated()
-                )
+                ).exceptionHandling(exceptionHandling ->
+                        exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(conf -> conf.jwt(jwtConfigurer ->
                         jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())

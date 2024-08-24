@@ -1,4 +1,4 @@
-CREATE TABLE tcc
+CREATE TABLE IF NOT EXISTS tcc
 (
     id           TEXT PRIMARY KEY NOT NULL,
     title        VARCHAR(255)     NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE tcc
 );
 
 
-CREATE TABLE tcc_committee_members
+CREATE TABLE IF NOT EXISTS tcc_committee_members
 (
     tcc_id       TEXT NOT NULL,
     professor_id TEXT NOT NULL,
@@ -27,12 +27,12 @@ CREATE TABLE tcc_committee_members
 -- ID está como TEXT pois O banco de dados não precisa saber que é um UUID.
 -- Além disso, se migrar para outro banco de dados, o UUID pode ser gerado de outra forma ou não seja suportado.
 
-CREATE TABLE keywords
+CREATE TABLE IF NOT EXISTS keywords
 (
     name VARCHAR(255) NOT NULL PRIMARY KEY
 );
 
-CREATE TABLE tcc_keywords
+CREATE TABLE IF NOT EXISTS tcc_keywords
 (
     tcc_id       TEXT         NOT NULL,
     keyword_name VARCHAR(255) NOT NULL,

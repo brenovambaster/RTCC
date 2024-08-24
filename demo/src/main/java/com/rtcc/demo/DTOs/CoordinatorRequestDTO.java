@@ -1,8 +1,7 @@
 package com.rtcc.demo.DTOs;
 
-import com.rtcc.demo.model.Course;
 
-public record CoordinatorRequestDTO(String id, String name, String email, String username, String password,
+public record CoordinatorRequestDTO(String id, String name, String email, String password,
                                     String course) {
 
 }

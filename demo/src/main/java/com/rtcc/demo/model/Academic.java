@@ -6,26 +6,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "coordinator")
-@Entity(name = "coordinator")
-@Getter
-@Setter
+@Entity(name = "academic")
+@Table(name = "academic")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Coordinator {
-
+@Getter
+@Setter
+public class Academic {
     @Id
     private String id;
-
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
     @OneToOne
     @JoinColumn(name = "course_id")
     private Course course;
 
-    public Coordinator(User user, Course course) {
+    public Academic(User user, Course course) {
         this.user = user;
         this.course = course;
     }
