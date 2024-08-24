@@ -3,6 +3,7 @@ package com.rtcc.demo.services;
 import com.rtcc.demo.DTOs.CoordinatorRequestDTO;
 import com.rtcc.demo.DTOs.CoordinatorResponseDTO;
 
+import com.rtcc.demo.DTOs.PasswordRequestDTO;
 import com.rtcc.demo.exception.EmailNotAvailableException;
 import com.rtcc.demo.exception.EntityNotFoundException;
 import com.rtcc.demo.infra.config.UserRole;
@@ -138,5 +139,31 @@ public class CoordinatorService {
             return new CoordinatorResponseDTO(updatedCoordinator);
 
         });
+    }
+
+    public Optional<CoordinatorResponseDTO> updateCoordinatorPassword(String id, PasswordRequestDTO data) {
+
+        if (!data.newPassword().equals(data.newPasswordConfirmation())) {
+            throw new IllegalArgumentException("New password and confirmation do not match");
+        }
+
+        Coordinator coordinator =  coordinatorRepository.findById(id).
+                orElseThrow(() -> new EntityNotFoundException("Coordinator not found: ", id));
+        User user = coordinator.getUser();
+
+        if (!passwordEncoder.matches(data.oldPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Old password does not match");
+        }
+
+        //set new password
+        return  userRepository.findById(user.getId()).map(userUpdate -> {
+
+            userUpdate.setPassword(passwordEncoder.encode(data.newPassword()));
+            User updatedUser = userRepository.save(userUpdate);
+            coordinator.setUser(updatedUser);
+            Coordinator updatedCoordinator = coordinatorRepository.save(coordinator);
+            return new CoordinatorResponseDTO(updatedCoordinator);
+        });
+
     }
 }

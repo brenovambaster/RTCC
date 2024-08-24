@@ -2,6 +2,7 @@ package com.rtcc.demo.controller;
 
 import com.rtcc.demo.DTOs.CoordinatorRequestDTO;
 import com.rtcc.demo.DTOs.CoordinatorResponseDTO;
+import com.rtcc.demo.DTOs.PasswordRequestDTO;
 import com.rtcc.demo.repository.CoordinatorRepository;
 import com.rtcc.demo.services.CoordinatorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -115,20 +116,20 @@ public class CoordinatorController {
 
     }
 //
-//    @CrossOrigin(origins = "*", allowedHeaders = "*")
-//    @PutMapping("/modifyPassword/{id}")
-//    @Operation(summary = "Update coordinator password by ID",
-//            description = "Update a coordinator password by its ID, if it exists. Otherwise, return 404 Not Found.",
-//            responses = {
-//                    @ApiResponse(responseCode = "200", description = "Coordinator updated successfully"),
-//                    @ApiResponse(responseCode = "404", description = "Coordinator not found")
-//            }
-//    )
-//    public ResponseEntity<CoordinatorResponseDTO> updateCoordinator(@PathVariable String id,
-//                                                                    @RequestBody CoordinatorRequestDTO data) {
-//        Optional<CoordinatorResponseDTO> coordinatorResponse = coordinatorService.updateCoordinator(id, data);
-//        return coordinatorResponse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-//
-//    }
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PutMapping("/change-password/{id}")
+    @Operation(summary = "Update coordinator password by ID",
+            description = "Update a coordinator password by its ID, if it exists. Otherwise, return 404 Not Found.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Coordinator updated successfully"),
+                    @ApiResponse(responseCode = "404", description = "Coordinator not found")
+            }
+    )
+    public ResponseEntity<CoordinatorResponseDTO> updateCoordinatorPassword(@PathVariable String id,
+                                                                            @RequestBody PasswordRequestDTO data) {
+        Optional<CoordinatorResponseDTO> coordinatorResponse = coordinatorService.updateCoordinatorPassword(id, data);
+        return coordinatorResponse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
+    }
 
 }

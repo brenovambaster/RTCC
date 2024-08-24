@@ -2,9 +2,13 @@ package com.rtcc.demo.controller;
 
 import com.rtcc.demo.DTOs.AcademicRequestDTO;
 import com.rtcc.demo.DTOs.AcademicResponseDTO;
+import com.rtcc.demo.DTOs.CoordinatorResponseDTO;
+import com.rtcc.demo.DTOs.PasswordRequestDTO;
 import com.rtcc.demo.repository.AcademicRepository;
 
 import com.rtcc.demo.services.AcademicService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +57,22 @@ public class AcademicController {
     public ResponseEntity<AcademicResponseDTO> updateAcademic(@PathVariable String id, @RequestBody AcademicRequestDTO academic) {
         Optional<AcademicResponseDTO> academicOptional = academicService.updateAcademic(id, academic);
         return academicOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PutMapping("/change-password/{id}")
+    @Operation(summary = "Update Academic password by ID",
+            description = "Update a Academic password by its ID, if it exists. Otherwise, return 404 Not Found.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Academic updated successfully"),
+                    @ApiResponse(responseCode = "404", description = "Academic not found")
+            }
+    )
+    public ResponseEntity<AcademicResponseDTO> updateAcademicPassword(@PathVariable String id,
+                                                                            @RequestBody PasswordRequestDTO data) {
+        Optional<AcademicResponseDTO> academicResponse = academicService.updateAcademicPassword(id, data);
+        return academicResponse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
     }
 }

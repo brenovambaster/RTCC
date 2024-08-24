@@ -2,10 +2,13 @@ package com.rtcc.demo.services;
 
 import com.rtcc.demo.DTOs.AcademicRequestDTO;
 import com.rtcc.demo.DTOs.AcademicResponseDTO;
+import com.rtcc.demo.DTOs.CoordinatorResponseDTO;
+import com.rtcc.demo.DTOs.PasswordRequestDTO;
 import com.rtcc.demo.exception.EmailNotAvailableException;
 import com.rtcc.demo.exception.EntityNotFoundException;
 import com.rtcc.demo.infra.config.UserRole;
 import com.rtcc.demo.model.Academic;
+import com.rtcc.demo.model.Coordinator;
 import com.rtcc.demo.model.Course;
 import com.rtcc.demo.model.User;
 import com.rtcc.demo.repository.AcademicRepository;
@@ -116,5 +119,38 @@ public class AcademicService {
             Academic updatedAcademic = academicRepository.save(academic1);
             return new AcademicResponseDTO(updatedAcademic);
         });
+    }
+
+    /**
+     * Atualizar senha Academico
+     *
+     * @param id   String UUID -> String Academic ID
+     * @param data PasswordRequestDTO -> String oldPassword, String newPassword, String newPasswordConfirmation
+     * @return
+     */
+    public Optional<AcademicResponseDTO> updateAcademicPassword(String id, PasswordRequestDTO data) {
+
+        if (!data.newPassword().equals(data.newPasswordConfirmation())) {
+            throw new IllegalArgumentException("New password and confirmation do not match");
+        }
+
+        Academic academic =  academicRepository.findById(id).
+                orElseThrow(() -> new EntityNotFoundException("Coordinator not found: ", id));
+        User user = academic.getUser();
+
+        if (!passwordEncoder.matches(data.oldPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Old password does not match");
+        }
+
+        //set new password
+        return  userRepository.findById(user.getId()).map(userUpdate -> {
+            userUpdate.setPassword(passwordEncoder.encode(data.newPassword()));
+
+            User updated = userRepository.save(userUpdate);
+            academic.setUser(updated);
+            Academic updatedAcademic = academicRepository.save(academic);
+            return new AcademicResponseDTO(updatedAcademic);
+        });
+
     }
 }
