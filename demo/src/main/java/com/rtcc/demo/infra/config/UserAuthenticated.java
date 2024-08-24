@@ -2,6 +2,7 @@ package com.rtcc.demo.infra.config;
 
 import org.springframework.security.core.GrantedAuthority;
 import com.rtcc.demo.model.User;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -20,7 +21,21 @@ public class UserAuthenticated implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> "ROLE_USER");
+        if (user.getRole() == UserRole.ADMIN) {
+            return List.of(
+                    new SimpleGrantedAuthority(UserRole.ADMIN.getRole()),
+                    new SimpleGrantedAuthority(UserRole.COORDINATOR.getRole()),
+                    new SimpleGrantedAuthority(UserRole.USER.getRole())
+            );
+        }
+        if (user.getRole() == UserRole.COORDINATOR) {
+            return List.of(
+                    new SimpleGrantedAuthority(UserRole.COORDINATOR.getRole()),
+                    new SimpleGrantedAuthority(UserRole.USER.getRole())
+            );
+        }
+
+        return List.of(new SimpleGrantedAuthority(UserRole.USER.getRole()));
     }
 
     @Override

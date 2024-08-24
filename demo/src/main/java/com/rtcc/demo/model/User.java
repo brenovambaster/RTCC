@@ -1,5 +1,6 @@
 package com.rtcc.demo.model;
 
+import com.rtcc.demo.infra.config.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,5 +20,7 @@ public class User {
     private String username;
     private String password;
     private String email;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
 }

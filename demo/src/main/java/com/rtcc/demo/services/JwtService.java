@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.stream.Collectors;
 
+import static java.rmi.server.LogStream.log;
+
 
 @Service
 public class JwtService {
@@ -35,7 +37,9 @@ public class JwtService {
                 .issuer("spring-security-jwt")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiry))
+                .subject(authentication.getName())
                 .claim("scope", scopes)
+                .claim("user_name", authentication.getName())
                 .build();
         return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

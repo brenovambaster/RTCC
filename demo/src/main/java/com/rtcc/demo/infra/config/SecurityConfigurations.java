@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +21,8 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -37,16 +40,42 @@ public class SecurityConfigurations {
     @Value("${jwt.public.key}")
     private RSAPublicKey publicKey;
 
+    private static final String ROLE_ADMIN = UserRole.ADMIN.getRole();
+    private static final String ROLE_COORDINATOR = UserRole.COORDINATOR.getRole();
+    private static final String ROLE_USER = UserRole.USER.getRole();
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests
-                        (auth -> auth.requestMatchers("/authenticate").permitAll().anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
-                .oauth2ResourceServer(conf -> conf.jwt(Customizer.withDefaults()))
-                .build();
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/coordinator/{id}").hasRole(ROLE_COORDINATOR)
+                        .requestMatchers(HttpMethod.PUT, "/coordinator/password/{id}").hasRole(ROLE_COORDINATOR)
+                        .requestMatchers("/coordinator", "/coordinator/{id}").hasRole(ROLE_ADMIN)
 
+
+                        .requestMatchers(HttpMethod.GET, "/course/{id}", "/course").permitAll()
+                        .requestMatchers("/course", "/course/{id}").hasRole(ROLE_COORDINATOR)
+
+                        .requestMatchers(HttpMethod.GET, "/professor/{id}", "/professor").permitAll()
+                        .requestMatchers("/professor", "professor/{id}").hasRole(ROLE_COORDINATOR)
+
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/tcc/{id}", "/tcc", "/tcc/search",
+                                "tcc/view/{filename}", "tcc/filter").permitAll()
+
+                        .requestMatchers("/tcc", "/tcc/{id}").hasRole(ROLE_COORDINATOR)
+
+
+                        .requestMatchers("/authenticate").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(Customizer.withDefaults())
+                .oauth2ResourceServer(conf -> conf.jwt(jwtConfigurer ->
+                        jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())
+                ))
+                .build();
     }
 
     @Bean
@@ -64,5 +93,16 @@ public class SecurityConfigurations {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("scope");
+        grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+
+        JwtAuthenticationConverter authenticationConverter = new JwtAuthenticationConverter();
+        authenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return authenticationConverter;
     }
 }
