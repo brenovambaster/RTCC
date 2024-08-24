@@ -2,20 +2,19 @@ package com.rtcc.demo.services;
 
 import com.rtcc.demo.DTOs.AcademicRequestDTO;
 import com.rtcc.demo.DTOs.AcademicResponseDTO;
+import com.rtcc.demo.exception.EmailNotAvailableException;
 import com.rtcc.demo.exception.EntityNotFoundException;
 import com.rtcc.demo.infra.config.UserRole;
 import com.rtcc.demo.model.Academic;
 import com.rtcc.demo.model.Course;
 import com.rtcc.demo.model.User;
 import com.rtcc.demo.repository.AcademicRepository;
-import com.rtcc.demo.repository.CoordinatorRepository;
 import com.rtcc.demo.repository.CourseRepository;
 import com.rtcc.demo.repository.UserRepository;
 import com.rtcc.demo.util.TokenGenerator;
 import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +47,10 @@ public class AcademicService {
 
         // Codifica a senha
         String encodedPassword = passwordEncoder.encode(data.password());
+
+        if (userRepository.existsByEmail(data.email())) {
+            throw new EmailNotAvailableException("Email already in use");
+        }
 
         // Cria o usuário
         User user = new User(data.name(), data.email(), encodedPassword, UserRole.ACADEMIC);

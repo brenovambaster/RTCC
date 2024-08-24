@@ -2,6 +2,8 @@ package com.rtcc.demo.controller;
 
 import com.rtcc.demo.services.VerificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,7 +14,8 @@ public class VerificationController {
 
     @GetMapping()
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public String verifyEmail(@RequestParam String token) {
-        return verificationService.verifyEmail(token);
+    public ResponseEntity<String> verifyEmail(@RequestParam String token) {
+        String result = verificationService.verifyEmail(token);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

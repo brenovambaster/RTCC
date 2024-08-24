@@ -3,6 +3,7 @@ package com.rtcc.demo.services;
 import com.rtcc.demo.DTOs.CoordinatorRequestDTO;
 import com.rtcc.demo.DTOs.CoordinatorResponseDTO;
 
+import com.rtcc.demo.exception.EmailNotAvailableException;
 import com.rtcc.demo.exception.EntityNotFoundException;
 import com.rtcc.demo.infra.config.UserRole;
 import com.rtcc.demo.model.Coordinator;
@@ -52,6 +53,10 @@ public class CoordinatorService {
         // Busca o curso e trata o erro se o curso não for encontrado
         Course course = courseRepository.findById(data.course())
                 .orElseThrow(() -> new EntityNotFoundException("Course ", data.course()));
+
+        if (userRepository.existsByEmail(data.email())) {
+            throw new EmailNotAvailableException("Email already in use");
+        }
 
         // Codifica a senha
         String encodedPassword = passwordEncoder.encode(data.password());

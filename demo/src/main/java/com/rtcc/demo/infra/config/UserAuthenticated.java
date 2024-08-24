@@ -1,5 +1,6 @@
 package com.rtcc.demo.infra.config;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import com.rtcc.demo.model.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,11 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@Getter
 public class UserAuthenticated implements UserDetails {
     private final User user;
-
-
-    private String token;
 
     public UserAuthenticated(User user) {
         this.user = user;

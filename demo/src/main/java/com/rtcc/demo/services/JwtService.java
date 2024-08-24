@@ -1,5 +1,6 @@
 package com.rtcc.demo.services;
 
+import com.rtcc.demo.infra.config.UserAuthenticated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -30,13 +31,20 @@ public class JwtService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
 
+        UserAuthenticated userAuthenticated = (UserAuthenticated) authentication.getPrincipal();
+
+        String name = userAuthenticated.getUser().getName();
+        String userId = userAuthenticated.getUser().getId();
+
+
         var claims = JwtClaimsSet.builder()
                 .issuer("spring-security-jwt")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiry))
                 .subject(authentication.getName())
                 .claim("scope", scopes)
-                .claim("user_name", authentication.getName())
+                .claim("user_id", userId)
+                .claim("name", name)
                 .build();
         return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
