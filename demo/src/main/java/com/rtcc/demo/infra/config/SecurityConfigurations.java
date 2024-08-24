@@ -76,6 +76,7 @@ public class SecurityConfigurations {
                         .requestMatchers("/authenticate").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/academic").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()
                 ).exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint))
