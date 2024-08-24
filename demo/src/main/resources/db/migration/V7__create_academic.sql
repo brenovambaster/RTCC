@@ -1,4 +1,4 @@
-CREATE TABLE academic
+CREATE TABLE IF NOT EXISTS academic
 (
     id        TEXT PRIMARY KEY NOT NULL,
     course_id TEXT             NOT NULL,

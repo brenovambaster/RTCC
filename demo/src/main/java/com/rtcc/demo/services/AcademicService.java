@@ -3,6 +3,7 @@ package com.rtcc.demo.services;
 import com.rtcc.demo.DTOs.AcademicRequestDTO;
 import com.rtcc.demo.DTOs.AcademicResponseDTO;
 import com.rtcc.demo.exception.EntityNotFoundException;
+import com.rtcc.demo.infra.config.UserRole;
 import com.rtcc.demo.model.Academic;
 import com.rtcc.demo.model.Course;
 import com.rtcc.demo.model.User;
@@ -49,7 +50,7 @@ public class AcademicService {
         String encodedPassword = passwordEncoder.encode(data.password());
 
         // Cria o usuário
-        User user = new User(data.name(), data.email(), encodedPassword);
+        User user = new User(data.name(), data.email(), encodedPassword, UserRole.ACADEMIC);
         user.setVerificationToken(TokenGenerator.generateVerificationToken());
 
         // Salva o usuário no banco de dados

@@ -2,6 +2,7 @@ package com.rtcc.demo.controller;
 
 import com.rtcc.demo.DTOs.CourseRequestDTO;
 import com.rtcc.demo.DTOs.CourseResponseDTO;
+import com.rtcc.demo.exception.EntityAlreadyExistsException;
 import com.rtcc.demo.exception.EntityDeletionException;
 import com.rtcc.demo.model.Course;
 import com.rtcc.demo.repository.CourseRepository;
@@ -41,9 +42,13 @@ public class CourseController {
     @PostMapping
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Void> saveCourse(@RequestBody CourseRequestDTO data) {
-        Course course = new Course(data);
-        courseRepository.save(course);
-        return ResponseEntity.ok().build();
+        try {
+            Course course = new Course(data);
+            courseRepository.save(course);
+            return ResponseEntity.ok().build();
+        } catch (EntityAlreadyExistsException e) {
+            return ResponseEntity.status(409).build(); // Retorna 409 Conflict
+        }
     }
 
     @Operation(summary = "Get all courses",

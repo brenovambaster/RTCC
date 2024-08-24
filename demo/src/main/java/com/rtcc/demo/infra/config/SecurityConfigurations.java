@@ -4,6 +4,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import lombok.RequiredArgsConstructor;
 import com.nimbusds.jose.jwk.RSAKey;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,6 +41,8 @@ public class SecurityConfigurations {
     @Value("${jwt.public.key}")
     private RSAPublicKey publicKey;
 
+
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private static final String ROLE_ADMIN = UserRole.ADMIN.getRole();
     private static final String ROLE_COORDINATOR = UserRole.COORDINATOR.getRole();
     private static final String ROLE_ACADEMIC = UserRole.ACADEMIC.getRole();
@@ -71,8 +74,11 @@ public class SecurityConfigurations {
                         .requestMatchers("/verify-email").permitAll()
 
                         .requestMatchers("/authenticate").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/academic").permitAll()
                         .anyRequest().authenticated()
-                )
+                ).exceptionHandling(exceptionHandling ->
+                        exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(conf -> conf.jwt(jwtConfigurer ->
                         jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())

@@ -30,10 +30,10 @@ public class User {
     @Column(name = "verification_token")
     private String verificationToken;  // Token temporário para verificação
 
-    public User(String name, String email, String encode) {
+    public User(String name, String email, String encode, UserRole role) {
         this.name = name;
         this.email = email;
         this.password = encode;
-        this.role = UserRole.COORDINATOR;
+        this.role = role;
     }
 }
