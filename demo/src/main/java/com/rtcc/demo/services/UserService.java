@@ -22,7 +22,7 @@ public class UserService {
         }
 
         User user =  userRepository.findById(id).
-                orElseThrow(() -> new EntityNotFoundException("User not found", ""));
+                orElseThrow(() -> new EntityNotFoundException("Usuario nao encontrado"));
 
         if (!passwordEncoder.matches(data.oldPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Old password does not match");
