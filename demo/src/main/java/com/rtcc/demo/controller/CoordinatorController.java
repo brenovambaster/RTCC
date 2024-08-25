@@ -115,21 +115,5 @@ public class CoordinatorController {
         return coordinatorResponse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
     }
-//
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @PutMapping("/change-password/{id}")
-    @Operation(summary = "Update coordinator password by ID",
-            description = "Update a coordinator password by its ID, if it exists. Otherwise, return 404 Not Found.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Coordinator updated successfully"),
-                    @ApiResponse(responseCode = "404", description = "Coordinator not found")
-            }
-    )
-    public ResponseEntity<CoordinatorResponseDTO> updateCoordinatorPassword(@PathVariable String id,
-                                                                            @RequestBody PasswordRequestDTO data) {
-        Optional<CoordinatorResponseDTO> coordinatorResponse = coordinatorService.updateCoordinatorPassword(id, data);
-        return coordinatorResponse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-
-    }
 
 }

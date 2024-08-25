@@ -59,20 +59,4 @@ public class AcademicController {
         return academicOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @PutMapping("/change-password/{id}")
-    @Operation(summary = "Update Academic password by ID",
-            description = "Update a Academic password by its ID, if it exists. Otherwise, return 404 Not Found.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Academic updated successfully"),
-                    @ApiResponse(responseCode = "404", description = "Academic not found")
-            }
-    )
-    public ResponseEntity<AcademicResponseDTO> updateAcademicPassword(@PathVariable String id,
-                                                                            @RequestBody PasswordRequestDTO data) {
-        Optional<AcademicResponseDTO> academicResponse = academicService.updateAcademicPassword(id, data);
-        return academicResponse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-
-    }
 }

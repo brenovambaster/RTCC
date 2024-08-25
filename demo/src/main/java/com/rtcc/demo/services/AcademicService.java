@@ -120,37 +120,4 @@ public class AcademicService {
             return new AcademicResponseDTO(updatedAcademic);
         });
     }
-
-    /**
-     * Atualizar senha Academico
-     *
-     * @param id   String UUID -> String Academic ID
-     * @param data PasswordRequestDTO -> String oldPassword, String newPassword, String newPasswordConfirmation
-     * @return
-     */
-    public Optional<AcademicResponseDTO> updateAcademicPassword(String id, PasswordRequestDTO data) {
-
-        if (!data.newPassword().equals(data.newPasswordConfirmation())) {
-            throw new IllegalArgumentException("New password and confirmation do not match");
-        }
-
-        Academic academic =  academicRepository.findById(id).
-                orElseThrow(() -> new EntityNotFoundException("Coordinator not found: ", id));
-        User user = academic.getUser();
-
-        if (!passwordEncoder.matches(data.oldPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Old password does not match");
-        }
-
-        //set new password
-        return  userRepository.findById(user.getId()).map(userUpdate -> {
-            userUpdate.setPassword(passwordEncoder.encode(data.newPassword()));
-
-            User updated = userRepository.save(userUpdate);
-            academic.setUser(updated);
-            Academic updatedAcademic = academicRepository.save(academic);
-            return new AcademicResponseDTO(updatedAcademic);
-        });
-
-    }
 }
