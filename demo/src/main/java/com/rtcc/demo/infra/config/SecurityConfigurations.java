@@ -53,7 +53,7 @@ public class SecurityConfigurations {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/coordinator/{id}").hasRole(ROLE_COORDINATOR)
-                        .requestMatchers(HttpMethod.PUT, "/coordinator/password/{id}").hasRole(ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.PUT, "/coordinator/password/{id}").hasAnyRole(ROLE_COORDINATOR, ROLE_ADMIN)
                         .requestMatchers("/coordinator", "/coordinator/{id}").hasRole(ROLE_ADMIN)
 
 
