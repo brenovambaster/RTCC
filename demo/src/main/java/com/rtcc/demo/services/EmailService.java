@@ -37,7 +37,7 @@ public class EmailService {
         String htmlContent = templateEngine.process("email-template", context);
 
         helper.setTo(user.getEmail());
-        helper.setSubject("Verifique seu e-mail");
+        helper.setSubject("RTCCIF: Confirme seu e-mail");
         helper.setText(htmlContent, true);
         helper.setFrom("rtcc.ifnmg@gmail.com");
 
