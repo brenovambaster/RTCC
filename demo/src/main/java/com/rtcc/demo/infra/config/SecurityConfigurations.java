@@ -4,7 +4,6 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import lombok.RequiredArgsConstructor;
 import com.nimbusds.jose.jwk.RSAKey;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -53,7 +52,9 @@ public class SecurityConfigurations {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/coordinator/{id}").hasRole(ROLE_COORDINATOR)
-                        .requestMatchers(HttpMethod.PUT, "/coordinator/password/{id}").hasAnyRole(ROLE_COORDINATOR, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.PUT, "/coordinator/password/{id}").hasAnyRole(ROLE_ADMIN, ROLE_COORDINATOR)
+                        .requestMatchers(HttpMethod.PUT, "/coordinator/{id}").hasAnyRole(ROLE_ADMIN, ROLE_COORDINATOR)
+
                         .requestMatchers("/coordinator", "/coordinator/{id}").hasRole(ROLE_ADMIN)
 
 
