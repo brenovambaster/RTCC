@@ -1,4 +1,4 @@
-CREATE TABLE professor
+CREATE TABLE if not exists professor
 (
     id               TEXT PRIMARY KEY UNIQUE NOT NULL,
     name             VARCHAR(255)            NOT NULL,
