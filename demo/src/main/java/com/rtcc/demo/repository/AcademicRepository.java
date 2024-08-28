@@ -4,7 +4,5 @@ import com.rtcc.demo.model.Academic;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AcademicRepository extends JpaRepository<Academic, String> {
-    Academic findByUserId(String userId);
 
-    Academic findByCourseId(String courseId);
 }

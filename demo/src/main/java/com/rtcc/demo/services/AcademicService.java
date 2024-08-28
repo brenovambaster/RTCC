@@ -27,11 +27,11 @@ import java.util.Optional;
 @Service
 public class AcademicService {
 
-    private AcademicRepository academicRepository;
-    private CourseRepository courseRepository;
-    private PasswordEncoder passwordEncoder;
-    private UserRepository userRepository;
-    private EmailService emailService;
+    private final AcademicRepository academicRepository;
+    private final CourseRepository courseRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final EmailService emailService;
 
     public AcademicService(AcademicRepository a, CourseRepository c, PasswordEncoder p, UserRepository u, EmailService e) {
         this.academicRepository = a;
