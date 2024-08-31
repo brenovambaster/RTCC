@@ -1,6 +1,5 @@
 package com.rtcc.demo.model;
 
-import com.rtcc.demo.infra.config.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

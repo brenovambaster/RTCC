@@ -3,10 +3,9 @@ package com.rtcc.demo.services;
 import com.rtcc.demo.DTOs.CoordinatorRequestDTO;
 import com.rtcc.demo.DTOs.CoordinatorResponseDTO;
 
-import com.rtcc.demo.DTOs.PasswordRequestDTO;
 import com.rtcc.demo.exception.EmailNotAvailableException;
 import com.rtcc.demo.exception.EntityNotFoundException;
-import com.rtcc.demo.infra.config.UserRole;
+import com.rtcc.demo.model.UserRole;
 import com.rtcc.demo.model.Coordinator;
 import com.rtcc.demo.model.Course;
 import com.rtcc.demo.model.User;
