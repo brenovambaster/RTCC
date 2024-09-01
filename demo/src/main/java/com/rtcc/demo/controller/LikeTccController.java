@@ -1,10 +1,14 @@
 package com.rtcc.demo.controller;
 
 import com.rtcc.demo.DTOs.LikeTccRequestDTO;
+import com.rtcc.demo.model.Tcc;
 import com.rtcc.demo.services.LikeTccService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -39,4 +43,9 @@ public class LikeTccController {
         return ResponseEntity.badRequest().build();
     }
 
+    @GetMapping("/likes")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity<List<Tcc>> getLikesByAcademic(@RequestParam String academicId) {
+        return ResponseEntity.ok(likeTccService.getLikesByAcademic(academicId));
+    }
 }

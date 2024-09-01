@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 public interface LikeTccRepository extends JpaRepository<LikeTcc, LikeTccId> {
-    @Query("SELECT a.likedTccs FROM academic a WHERE a.id = :academicId")
-    Set<Tcc> findLikedTccsByAcademicId(@Param("academicId") String academicId);
+    @Query(value = "SELECT l.* FROM academic_likes_tcc l " +
+            "WHERE l.academic_id = :academicId", nativeQuery = true)
+    List<LikeTcc> findLikedTccsByAcademicId(@Param("academicId") String academicId);
+
+    List<LikeTcc> findByAcademic(Academic academic);
 }

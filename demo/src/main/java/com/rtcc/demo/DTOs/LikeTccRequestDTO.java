@@ -1,5 +1,5 @@
 package com.rtcc.demo.DTOs;
 
-public record LikeTccRequestDTO(String userId, String tccId) {
+public record LikeTccRequestDTO(String academicId, String tccId) {
 
 }
