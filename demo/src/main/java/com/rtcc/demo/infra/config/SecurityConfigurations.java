@@ -70,7 +70,14 @@ public class SecurityConfigurations {
                                 "tcc/view/{filename}", "tcc/search/").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "tcc/filter", "tcc/search/").permitAll()
-                        .requestMatchers(HttpMethod.POST, "tcc/like", "tcc/unlike").hasRole(ROLE_ACADEMIC)
+                        .requestMatchers(HttpMethod.POST,
+                                "tcc/like/add",
+                                "tcc/like/remove",
+                                "tcc/like/by-academic",
+                                "tcc/favorites/add",
+                                "tcc/favorites/remove",
+                                "tcc/favorites/by-academic"
+                        ).hasRole(ROLE_ACADEMIC)
                         .requestMatchers("/tcc", "/tcc/{id}").hasRole(ROLE_COORDINATOR)
 
                         .requestMatchers("/verify-email").permitAll()

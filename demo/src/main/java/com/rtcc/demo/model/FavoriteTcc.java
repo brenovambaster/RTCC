@@ -23,6 +23,12 @@ public class FavoriteTcc implements Serializable {
 
     @ManyToOne
     @MapsId("academicId")
-    @JoinColumn(name = "academic_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "academic_id")
     private Academic academic;
+
+    public FavoriteTcc(Tcc tcc, Academic academic) {
+        this.tcc = tcc;
+        this.academic = academic;
+        this.id = new FavoriteTccId(tcc.getId(), academic.getId());
+    }
 }

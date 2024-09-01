@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/tcc")
+@RequestMapping("tcc/like")
 @Tag(name = "Like Tcc")
 public class LikeTccController {
 
@@ -21,30 +20,47 @@ public class LikeTccController {
         this.likeTccService = likeTccService;
     }
 
-
-    @PostMapping("/like")
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    /**
+     * Endpoint para curtir um TCC
+     *
+     * @param dto LikeTccRequestDTO
+     * @return ResponseEntity com status de sucesso ou erro
+     */
+    @PostMapping("/add")
     public ResponseEntity<Void> likeTcc(@RequestBody LikeTccRequestDTO dto) {
-
-        if (likeTccService.likeTcc(dto)) {
+        boolean success = likeTccService.likeTcc(dto);
+        if (success) {
             return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.badRequest().build();
     }
 
-    @PostMapping("/unlike")
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    /**
+     * Endpoint para remover curtida de um TCC
+     *
+     * @param dto LikeTccRequestDTO
+     * @return ResponseEntity com status de sucesso ou erro
+     */
+    @PostMapping("/remove")
     public ResponseEntity<Void> unlikeTcc(@RequestBody LikeTccRequestDTO dto) {
-
-        if (likeTccService.unlikeTcc(dto)) {
+        boolean success = likeTccService.unlikeTcc(dto);
+        if (success) {
             return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.badRequest().build();
     }
 
-    @GetMapping("/likes")
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    /**
+     * Endpoint para obter todos os TCCs curtidos por um acadêmico
+     *
+     * @param academicId ID do acadêmico
+     * @return ResponseEntity com a lista de TCCs curtidos
+     */
+    @GetMapping("/by-academic")
     public ResponseEntity<List<Tcc>> getLikesByAcademic(@RequestParam String academicId) {
-        return ResponseEntity.ok(likeTccService.getTccLikesByAcademic(academicId));
+        List<Tcc> likedTccs = likeTccService.getTccLikesByAcademic(academicId);
+        return ResponseEntity.ok(likedTccs);
     }
 }

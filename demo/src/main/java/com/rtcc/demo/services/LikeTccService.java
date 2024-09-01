@@ -69,13 +69,13 @@ public class LikeTccService {
     @Transactional
     public boolean unlikeTcc(LikeTccRequestDTO dto) {
 
-        if (!likeTccRepository.existsById(new LikeTccId(dto.academicId(), dto.tccId()))) {
+        if (!likeTccRepository.existsById(new LikeTccId(dto.tccId(), dto.academicId()))) {
             throw new EntityNotFoundException("Like not found");
         }
 
         LikeTcc likeTcc = buildLikeTcc(dto);
         Tcc tcc = likeTcc.getTcc();
-        tcc.unlike();
+        tcc.removeLike();
         tccRepository.save(tcc);
 
         likeTccRepository.delete(likeTcc);
@@ -106,6 +106,4 @@ public class LikeTccService {
         }
         return tccs;
     }
-
-
 }

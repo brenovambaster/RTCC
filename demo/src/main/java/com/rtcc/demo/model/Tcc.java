@@ -92,9 +92,19 @@ public class Tcc {
         this.numLikes++;
     }
 
-    public void unlike() {
+    public void removeLike() {
         if (this.numLikes > 0) {
             this.numLikes--;
+        }
+    }
+
+    public void addFavorite() {
+        this.numFavorites++;
+    }
+
+    public void removeFavorite() {
+        if (this.numFavorites > 0) {
+            this.numFavorites--;
         }
     }
 }
