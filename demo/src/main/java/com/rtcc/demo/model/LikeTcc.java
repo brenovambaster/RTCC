@@ -31,10 +31,8 @@ public class LikeTcc implements Serializable {
 
 
     public LikeTcc(Tcc tcc, Academic academic) {
-        Logger logger = LoggerFactory.getLogger(LikeTcc.class);
         this.tcc = tcc;
         this.academic = academic;
         this.id = new LikeTccId(tcc.getId(), academic.getId());
-        logger.warn("LikeTcc created: id: " + this.id.toString());
     }
 }

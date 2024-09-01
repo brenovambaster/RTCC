@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 
 @RestController
@@ -46,6 +45,6 @@ public class LikeTccController {
     @GetMapping("/likes")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<Tcc>> getLikesByAcademic(@RequestParam String academicId) {
-        return ResponseEntity.ok(likeTccService.getLikesByAcademic(academicId));
+        return ResponseEntity.ok(likeTccService.getTccLikesByAcademic(academicId));
     }
 }

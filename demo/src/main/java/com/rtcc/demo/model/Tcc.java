@@ -66,4 +66,35 @@ public class Tcc {
     )
     private Set<Keywords> keywords = new HashSet<>();
 
+    @Column(name = "num_likes")
+    private int numLikes;
+    @Column(name = "num_favorites")
+    private int numFavorites;
+
+    public Tcc(Object o, String title, String s, String author, Course course, LocalDate localDate, String language,
+               Professor advisor, Set<Professor> committeeMembers, String summary, String abstractText, Set<Keywords> keywordsSet) {
+
+        this.title = title;
+        this.pathFile = s;
+        this.author = author;
+        this.course = course;
+        this.defenseDate = localDate;
+        this.language = language;
+        this.advisor = advisor;
+        this.committeeMembers = committeeMembers;
+        this.summary = summary;
+        this.abstractText = abstractText;
+        this.keywords = keywordsSet;
+
+    }
+
+    public void addLike() {
+        this.numLikes++;
+    }
+
+    public void unlike() {
+        if (this.numLikes > 0) {
+            this.numLikes--;
+        }
+    }
 }

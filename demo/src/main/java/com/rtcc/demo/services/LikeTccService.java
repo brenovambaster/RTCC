@@ -1,21 +1,22 @@
 package com.rtcc.demo.services;
 
 import com.rtcc.demo.DTOs.*;
+import com.rtcc.demo.exception.EntityAlreadyExistsException;
 import com.rtcc.demo.exception.EntityNotFoundException;
 import com.rtcc.demo.model.Academic;
 import com.rtcc.demo.model.LikeTcc;
 import com.rtcc.demo.model.Tcc;
+import com.rtcc.demo.model.id.LikeTccId;
 import com.rtcc.demo.repository.AcademicRepository;
 import com.rtcc.demo.repository.LikeTccRepository;
 import com.rtcc.demo.repository.TccRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.logging.Logger;
 
 @Service
@@ -41,9 +42,22 @@ public class LikeTccService {
      * @param dto LikeTccRequestDTO
      * @return
      */
+    @Transactional
     public boolean likeTcc(LikeTccRequestDTO dto) {
+        if (likeTccRepository.existsById(new LikeTccId(dto.tccId(), dto.academicId()))) {
+            throw new EntityAlreadyExistsException("Tcc já foi curtido por este usuário. ");
+        }
+
         LikeTcc likeTcc = buildLikeTcc(dto);
+
+        // Incrementa a contagem de likes
+        Tcc tcc = likeTcc.getTcc();
+        tcc.addLike();
+
+        // Salva as alterações
+        tccRepository.save(tcc);
         likeTccRepository.save(likeTcc);
+
         return true;
     }
 
@@ -52,12 +66,21 @@ public class LikeTccService {
      *
      * @param dto LikeTccRequestDTO
      */
+    @Transactional
     public boolean unlikeTcc(LikeTccRequestDTO dto) {
+
+        if (!likeTccRepository.existsById(new LikeTccId(dto.academicId(), dto.tccId()))) {
+            throw new EntityNotFoundException("Like not found");
+        }
+
         LikeTcc likeTcc = buildLikeTcc(dto);
+        Tcc tcc = likeTcc.getTcc();
+        tcc.unlike();
+        tccRepository.save(tcc);
+
         likeTccRepository.delete(likeTcc);
         return true;
     }
-
 
     /**
      * Build a LikeTcc object
@@ -74,14 +97,13 @@ public class LikeTccService {
         return new LikeTcc(tcc, academic);
     }
 
-    public List<Tcc> getLikesByAcademic(String academicId) {
+    public List<Tcc> getTccLikesByAcademic(String academicId) {
         List<Tcc> tccs = new ArrayList<>();
         List<LikeTcc> likes = likeTccRepository.findLikedTccsByAcademicId(academicId);
 
         for (LikeTcc like : likes) {
             tccs.add(like.getTcc());
         }
-
         return tccs;
     }
 

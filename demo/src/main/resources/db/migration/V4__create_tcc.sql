@@ -1,15 +1,17 @@
 CREATE TABLE IF NOT EXISTS tcc
 (
-    id           TEXT PRIMARY KEY NOT NULL,
-    title        VARCHAR(255)     NOT NULL,
-    author       VARCHAR(255)     NOT NULL,
-    course       VARCHAR(255)     NOT NULL,
-    defense_date DATE             NOT NULL,
-    advisor      TEXT             NOT NULL,
-    summary      TEXT             NOT NULL,
-    abstract     TEXT             NOT NULL,
-    language     VARCHAR(50)      NOT NULL,
-    path_file    VARCHAR(255)     NOT NULL,
+    id            TEXT PRIMARY KEY NOT NULL,
+    title         VARCHAR(255)     NOT NULL,
+    author        VARCHAR(255)     NOT NULL,
+    course        VARCHAR(255)     NOT NULL,
+    defense_date  DATE             NOT NULL,
+    advisor       TEXT             NOT NULL,
+    summary       TEXT             NOT NULL,
+    abstract      TEXT             NOT NULL,
+    language      VARCHAR(50)      NOT NULL,
+    path_file     VARCHAR(255)     NOT NULL,
+    num_likes     INT              NOT NULL DEFAULT 0,
+    num_favorites INT              NOT NULL DEFAULT 0,
     CONSTRAINT fk_course FOREIGN KEY (course) REFERENCES course (id),
     CONSTRAINT fk_advisor FOREIGN KEY (advisor) REFERENCES professor (id)
 );
