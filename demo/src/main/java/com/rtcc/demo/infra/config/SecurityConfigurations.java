@@ -2,7 +2,6 @@ package com.rtcc.demo.infra.config;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.rtcc.demo.model.UserRole;
 import lombok.RequiredArgsConstructor;
 import com.nimbusds.jose.jwk.RSAKey;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,6 +70,7 @@ public class SecurityConfigurations {
                                 "tcc/view/{filename}", "tcc/search/").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "tcc/filter", "tcc/search/").permitAll()
+                        .requestMatchers(HttpMethod.POST, "tcc/like", "tcc/unlike").hasRole(ROLE_ACADEMIC)
                         .requestMatchers("/tcc", "/tcc/{id}").hasRole(ROLE_COORDINATOR)
 
                         .requestMatchers("/verify-email").permitAll()

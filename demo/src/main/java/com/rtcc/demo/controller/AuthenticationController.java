@@ -19,7 +19,7 @@ public class AuthenticationController {
 
     @PostMapping
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public String Authenticate(Authentication authentication) {
+    public String authenticate(Authentication authentication) {
         return authenticationService.authenticate(authentication);
     }
 

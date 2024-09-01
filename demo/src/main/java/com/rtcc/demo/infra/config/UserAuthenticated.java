@@ -1,6 +1,5 @@
 package com.rtcc.demo.infra.config;
 
-import com.rtcc.demo.model.UserRole;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import com.rtcc.demo.model.User;

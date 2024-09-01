@@ -1,4 +1,4 @@
-package com.rtcc.demo.model;
+package com.rtcc.demo.infra.config;
 
 public enum UserRole {
     ADMIN("ADMIN"), COORDINATOR("COORDINATOR"), ACADEMIC("ACADEMIC");

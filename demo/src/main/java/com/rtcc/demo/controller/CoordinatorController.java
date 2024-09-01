@@ -26,11 +26,6 @@ import java.util.Optional;
 public class CoordinatorController {
 
     @Autowired
-    private CoordinatorRepository coordinatorRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
     CoordinatorService coordinatorService;
 
 

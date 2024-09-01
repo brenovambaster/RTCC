@@ -25,5 +25,6 @@ public class Academic {
     public Academic(User user, Course course) {
         this.user = user;
         this.course = course;
+        this.id = user.getId();
     }
 }
