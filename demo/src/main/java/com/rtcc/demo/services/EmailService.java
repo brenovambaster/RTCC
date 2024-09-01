@@ -20,6 +20,8 @@ public class EmailService {
     @Autowired
     private TemplateEngine templateEngine;
 
+    private static final String FROM = "rtcc.ifnmg@gmail.com";
+
     @Async
     public void sendVerificationEmail(User user) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -39,8 +41,25 @@ public class EmailService {
         helper.setTo(user.getEmail());
         helper.setSubject("RTCCIF: Confirme seu e-mail");
         helper.setText(htmlContent, true);
-        helper.setFrom("rtcc.ifnmg@gmail.com");
+        helper.setFrom(FROM);
 
+        mailSender.send(mimeMessage);
+    }
+
+
+    public void sendEmail(String email, String subject, String message, String title) throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+
+        Context context = new Context();
+        context.setVariable("subject", title);
+        context.setVariable("message", message);
+        String htmlContent = templateEngine.process("email-template", context);
+
+        helper.setTo(email);
+        helper.setSubject(subject);
+        helper.setText(htmlContent, true);
+        helper.setFrom(FROM);
         mailSender.send(mimeMessage);
     }
 }

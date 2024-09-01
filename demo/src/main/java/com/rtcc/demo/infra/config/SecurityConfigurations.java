@@ -83,6 +83,7 @@ public class SecurityConfigurations {
                         .requestMatchers("/verify-email").permitAll()
 
                         .requestMatchers("/authenticate").permitAll()
+                        .requestMatchers("user/reset-password").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/academic").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
