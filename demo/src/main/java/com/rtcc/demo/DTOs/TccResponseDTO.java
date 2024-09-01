@@ -14,5 +14,8 @@ public record TccResponseDTO(String id,
                              String summary,
                              String abstractText,
                              List<KeywordsResponseDTO> keywords,
-                             String pathFile) {
+                             String pathFile,
+                             int numLikes,
+                             int numFavorites
+) {
 }

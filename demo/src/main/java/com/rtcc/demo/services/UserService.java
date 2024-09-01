@@ -58,7 +58,7 @@ public class UserService {
         String newPassword = passwordGenerator.generateRandomPassword();
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-        String emailBody = "Sua nova senha é: " + newPassword + ".<br/><br/>" +
+        String emailBody = "Sua nova senha é: " + newPassword + "<br/><br/>" +
                 "Por favor, altere sua senha assim que possível.";
         emailService.sendEmail(user.getEmail(), "ALTERAÇÃO DE SENHA", emailBody, "Nova senha");
     }

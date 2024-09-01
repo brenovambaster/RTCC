@@ -92,7 +92,6 @@ public class TccController {
             );
 
             Tcc tcc = tccService.convertDtoToEntity(updatedTccRequestDTO);
-
             Tcc savedTcc = tccService.saveTcc(tcc);
 
             TccResponseDTO responseDTO = tccService.convertToResponseDTO(savedTcc);
@@ -167,7 +166,9 @@ public class TccController {
             Tcc tcc = tccService.convertDtoToEntity(updatedTccRequestDTO);
 
             tcc.setId(id);
-
+            tcc.setNumLikes(existingTcc.get().getNumLikes());
+            tcc.setNumFavorites(existingTcc.get().getNumFavorites());
+            
             tcc.setPathFile(existingTcc.get().getPathFile());
 
             if (file != null) {

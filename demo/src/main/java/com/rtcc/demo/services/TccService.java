@@ -188,7 +188,9 @@ public class TccService {
                 tcc.getSummary(),
                 tcc.getAbstractText(),
                 tcc.getKeywords().stream().map(keyword -> new KeywordsResponseDTO(keyword.getName())).toList(),
-                tcc.getPathFile()
+                tcc.getPathFile(),
+                tcc.getNumLikes(),
+                tcc.getNumFavorites()
         );
     }
 
