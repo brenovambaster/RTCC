@@ -1,6 +1,7 @@
 package com.rtcc.demo.controller;
 
 import com.rtcc.demo.DTOs.FavoriteTccRequestDTO;
+import com.rtcc.demo.DTOs.TccResponseDTO;
 import com.rtcc.demo.model.Tcc;
 import com.rtcc.demo.services.FavoriteTccService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,6 +30,7 @@ public class FavoriteController {
      * @return ResponseEntity com status de sucesso ou erro
      */
     @PostMapping("/add")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Void> favoriteTcc(@RequestBody FavoriteTccRequestDTO dto) {
         boolean success = favoriteTccService.favoriteTcc(dto);
         if (success) {
@@ -45,6 +47,7 @@ public class FavoriteController {
      * @return ResponseEntity com status de sucesso ou erro
      */
     @PostMapping("/remove")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Void> unfavoriteTcc(@RequestBody FavoriteTccRequestDTO dto) {
         boolean success = favoriteTccService.unfavoriteTcc(dto);
         if (success) {
@@ -61,8 +64,15 @@ public class FavoriteController {
      * @return ResponseEntity com a lista de TCCs favoritados
      */
     @GetMapping("/by-academic")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<Tcc>> getTccFavoritesByAcademic(@RequestParam String academicId) {
         List<Tcc> favorites = favoriteTccService.getTccFavoritesByAcademic(academicId);
         return ResponseEntity.ok(favorites);
+    }
+
+    @GetMapping("/get-favorite-tcc")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity<TccResponseDTO> getFavoritedTcc(@RequestBody FavoriteTccRequestDTO dto) {
+        return ResponseEntity.ok(favoriteTccService.getFavoriteTcc(dto));
     }
 }

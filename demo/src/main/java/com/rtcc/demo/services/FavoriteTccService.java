@@ -1,6 +1,7 @@
 package com.rtcc.demo.services;
 
 import com.rtcc.demo.DTOs.FavoriteTccRequestDTO;
+import com.rtcc.demo.DTOs.TccResponseDTO;
 import com.rtcc.demo.exception.EntityAlreadyExistsException;
 import com.rtcc.demo.exception.EntityNotFoundException;
 import com.rtcc.demo.model.Academic;
@@ -66,7 +67,7 @@ public class FavoriteTccService {
      */
     @Transactional
     public boolean unfavoriteTcc(FavoriteTccRequestDTO dto) {
-        if (!favoriteTccRepository.existsById(new FavoriteTccId( dto.tccId(),dto.academicId()))) {
+        if (!favoriteTccRepository.existsById(new FavoriteTccId(dto.tccId(), dto.academicId()))) {
             throw new EntityNotFoundException("Favorite not found");
         }
 
@@ -102,5 +103,12 @@ public class FavoriteTccService {
             tccs.add(favorite.getTcc());
         }
         return tccs;
+    }
+
+    public TccResponseDTO getFavoriteTcc(FavoriteTccRequestDTO dto) {
+        FavoriteTcc favoriteTcc = favoriteTccRepository.findById(new FavoriteTccId(dto.tccId(), dto.academicId()))
+                .orElseThrow(() -> new EntityNotFoundException("Favorite not found"));
+
+        return new TccService().convertToResponseDTO(favoriteTcc.getTcc());
     }
 }

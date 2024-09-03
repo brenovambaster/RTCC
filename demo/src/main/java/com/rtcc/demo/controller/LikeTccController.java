@@ -1,6 +1,7 @@
 package com.rtcc.demo.controller;
 
 import com.rtcc.demo.DTOs.LikeTccRequestDTO;
+import com.rtcc.demo.DTOs.TccResponseDTO;
 import com.rtcc.demo.model.Tcc;
 import com.rtcc.demo.services.LikeTccService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,6 +28,7 @@ public class LikeTccController {
      * @return ResponseEntity com status de sucesso ou erro
      */
     @PostMapping("/add")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Void> likeTcc(@RequestBody LikeTccRequestDTO dto) {
         boolean success = likeTccService.likeTcc(dto);
         if (success) {
@@ -43,6 +45,7 @@ public class LikeTccController {
      * @return ResponseEntity com status de sucesso ou erro
      */
     @PostMapping("/remove")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Void> unlikeTcc(@RequestBody LikeTccRequestDTO dto) {
         boolean success = likeTccService.unlikeTcc(dto);
         if (success) {
@@ -59,8 +62,15 @@ public class LikeTccController {
      * @return ResponseEntity com a lista de TCCs curtidos
      */
     @GetMapping("/by-academic")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<Tcc>> getLikesByAcademic(@RequestParam String academicId) {
         List<Tcc> likedTccs = likeTccService.getTccLikesByAcademic(academicId);
         return ResponseEntity.ok(likedTccs);
+    }
+
+    @GetMapping("/get-liked-tcc")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity<TccResponseDTO> getLikedTcc(@RequestBody LikeTccRequestDTO dto) {
+        return ResponseEntity.ok(likeTccService.getLikedTcc(dto));
     }
 }

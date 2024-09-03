@@ -26,14 +26,16 @@ public class LikeTccService {
     private final TccRepository tccRepository;
     private final AcademicRepository academicRepository;
     private final AcademicService academicService;
+    private final TccService tccService;
     Logger logger = Logger.getLogger(LikeTccService.class.getName());
 
     @Autowired
-    public LikeTccService(LikeTccRepository likeTccRepository, TccRepository tccRepository, AcademicRepository academicRepository, AcademicService academicService) {
+    public LikeTccService(LikeTccRepository likeTccRepository, TccRepository tccRepository, AcademicRepository academicRepository, AcademicService academicService, TccService tccService) {
         this.likeTccRepository = likeTccRepository;
         this.tccRepository = tccRepository;
         this.academicRepository = academicRepository;
         this.academicService = academicService;
+        this.tccService = tccService;
     }
 
     /**
@@ -105,5 +107,11 @@ public class LikeTccService {
             tccs.add(like.getTcc());
         }
         return tccs;
+    }
+
+    public TccResponseDTO getLikedTcc(LikeTccRequestDTO dto) {
+        LikeTcc likeTcc = likeTccRepository.findById(new LikeTccId(dto.tccId(), dto.academicId()))
+                .orElseThrow(() -> new EntityNotFoundException("Like not found"));
+        return tccService.convertToResponseDTO(likeTcc.getTcc());
     }
 }
