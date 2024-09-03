@@ -68,7 +68,7 @@ public class LikeTccController {
         return ResponseEntity.ok(likedTccs);
     }
 
-    @GetMapping("/get-liked-tcc")
+    @PostMapping("/get-liked-tcc")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<TccResponseDTO> getLikedTcc(@RequestBody LikeTccRequestDTO dto) {
         return ResponseEntity.ok(likeTccService.getLikedTcc(dto));

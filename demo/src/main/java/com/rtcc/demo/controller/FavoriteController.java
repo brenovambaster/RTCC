@@ -70,7 +70,7 @@ public class FavoriteController {
         return ResponseEntity.ok(favorites);
     }
 
-    @GetMapping("/get-favorite-tcc")
+    @PostMapping("/get-favorite-tcc")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<TccResponseDTO> getFavoritedTcc(@RequestBody FavoriteTccRequestDTO dto) {
         return ResponseEntity.ok(favoriteTccService.getFavoriteTcc(dto));

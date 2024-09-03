@@ -73,10 +73,13 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST,
                                 "tcc/like/add",
                                 "tcc/like/remove",
-                                "tcc/like/by-academic",
+                                "tcc/like/get-liked-tcc",
                                 "tcc/favorites/add",
                                 "tcc/favorites/remove",
-                                "tcc/favorites/by-academic"
+                                "tcc/favorites/get-favorite-tcc"
+                        ).hasRole(ROLE_ACADEMIC)
+                        .requestMatchers(HttpMethod.GET,
+                                "tcc/like/by-academic", "tcc/favorites/by-academic"
                         ).hasRole(ROLE_ACADEMIC)
                         .requestMatchers("/tcc", "/tcc/{id}").hasRole(ROLE_COORDINATOR)
 
