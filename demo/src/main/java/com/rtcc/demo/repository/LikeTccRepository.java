@@ -15,6 +15,4 @@ public interface LikeTccRepository extends JpaRepository<LikeTcc, LikeTccId> {
     @Query(value = "SELECT l.* FROM academic_likes_tcc l " +
             "WHERE l.academic_id = :academicId", nativeQuery = true)
     List<LikeTcc> findLikedTccsByAcademicId(@Param("academicId") String academicId);
-
-    List<LikeTcc> findByAcademic(Academic academic);
 }

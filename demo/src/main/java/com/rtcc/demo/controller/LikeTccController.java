@@ -64,6 +64,7 @@ public class LikeTccController {
     @GetMapping("/by-academic")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<Tcc>> getLikesByAcademic(@RequestParam String academicId) {
+        // TODO: Devo retornar um dto ao invés de uma entidade. Refazer para a próxima sprint
         List<Tcc> likedTccs = likeTccService.getTccLikesByAcademic(academicId);
         return ResponseEntity.ok(likedTccs);
     }

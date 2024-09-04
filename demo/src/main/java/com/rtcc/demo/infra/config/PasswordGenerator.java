@@ -7,9 +7,9 @@ import java.security.SecureRandom;
 @Service
 public class PasswordGenerator {
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*()-_=+[]{}";
-    private static final int PASSWORD_LENGTH = 12; // Você pode ajustar o comprimento da senha conforme necessário
+    private static final int PASSWORD_LENGTH = 12; //  Ajustar o comprimento da senha conforme necessário
 
-    private SecureRandom random = new SecureRandom();
+    private final SecureRandom random = new SecureRandom(); //TODO: usar o @Autowired para injetar a dependência. Próxima iteracao
 
     public String generateRandomPassword() {
         StringBuilder password = new StringBuilder(PASSWORD_LENGTH);

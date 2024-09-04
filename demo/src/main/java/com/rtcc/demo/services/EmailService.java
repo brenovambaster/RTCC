@@ -20,6 +20,7 @@ public class EmailService {
     @Autowired
     private TemplateEngine templateEngine;
 
+    //TOOD: pegar email do application.properties. Fazer isso para a próxima sprint
     private static final String FROM = "rtcc.ifnmg@gmail.com";
 
     @Async

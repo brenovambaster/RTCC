@@ -66,6 +66,7 @@ public class FavoriteController {
     @GetMapping("/by-academic")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<Tcc>> getTccFavoritesByAcademic(@RequestParam String academicId) {
+        //TODO: devo retornar um DTO ao invés da entidade. Refazer para próxima sprint
         List<Tcc> favorites = favoriteTccService.getTccFavoritesByAcademic(academicId);
         return ResponseEntity.ok(favorites);
     }

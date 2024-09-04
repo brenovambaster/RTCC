@@ -20,8 +20,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/academic")
 public class AcademicController {
-    @Autowired
-    private AcademicRepository academicRepository;
+
     @Autowired
     private AcademicService academicService;
 

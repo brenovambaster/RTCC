@@ -19,8 +19,6 @@ import java.util.List;
 public class KeywordsController {
     @Autowired
     private KeywordsRepository keywordsRepository;
-    @Autowired
-    private TccRepository tccRepository;
 
     @PostMapping
     public ResponseEntity<Void> saveKeywords(@RequestBody KeywordsRequestDTO data) {

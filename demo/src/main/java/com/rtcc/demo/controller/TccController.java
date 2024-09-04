@@ -34,8 +34,6 @@ public class TccController {
 
     @Autowired
     private TccService tccService;
-    @Autowired
-    private KeywordsRepository keywordsRepository;
 
 
     @PostMapping
