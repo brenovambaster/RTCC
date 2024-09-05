@@ -5,25 +5,25 @@ VALUES ('a4d2f1f3-75e0-4e9a-b0d3-2a7262cf564f', 'Ciência da Computação', 'CC0
 
 
 INSERT INTO professor (id, name, email, research_area, title, location_of_work)
-VALUES ('d5a4b637-6299-4f87-900d-89b23a6b7c8a', 'Ana Beatriz Silva', 'ana.silva@ifnmg.com.br', 'Matematica', 'Doutor',
+VALUES ('d5a4b637-6299-4f87-900d-89b23a6b7c8a', 'Ana Beatriz Silva', 'ana.silva@ifnmg.edu.br', 'Matematica', 'Doutor',
         'Interno'),
-       ('f6b74d68-d382-4b42-87bc-237f7cb2ea11', 'Carlos Pereira', 'carlos.pereira@ifnmg.com.br', 'Álgebra Abstrata',
+       ('f6b74d68-d382-4b42-87bc-237f7cb2ea11', 'Carlos Pereira', 'carlos.pereira@ifnmg.edu.br', 'Álgebra Abstrata',
         'Mestre', 'Externo'),
-       ('a2e6b28b-012f-4b92-a344-2b5b5d603f33', 'Juliana Souza', 'juliana.souza@ifnmg.com.br', 'Teoria da Medida',
+       ('a2e6b28b-012f-4b92-a344-2b5b5d603f33', 'Juliana Souza', 'juliana.souza@ifnmg.edu.br', 'Teoria da Medida',
         'Doutor', 'Interno'),
-       ('5c9e9796-6b76-4b69-80f2-3e2e5f5825b2', 'Mariana Oliveira', 'mariana.oliveira@ifnmg.com.br', 'Espaços Métricos',
+       ('5c9e9796-6b76-4b69-80f2-3e2e5f5825b2', 'Mariana Oliveira', 'mariana.oliveira@ifnmg.edu.br', 'Espaços Métricos',
         'Mestre', 'Interno'),
-       ('c9a3833e-d90f-4c35-89d7-405c4c5cb535', 'Fernando Lima', 'fernando.lima@ifnmg.com.br',
+       ('c9a3833e-d90f-4c35-89d7-405c4c5cb535', 'Fernando Lima', 'fernando.lima@ifnmg.edu.br',
         'Teoria Quântica de Campos', 'Licenciatura', 'Externo'),
-       ('a5e2b139-5390-4a52-9d99-f9e5b40cb37b', 'Fernanda Costa', 'fernanda.costa@ifnmg.com.br',
+       ('a5e2b139-5390-4a52-9d99-f9e5b40cb37b', 'Fernanda Costa', 'fernanda.costa@ifnmg.edu.br',
         'Geometria Diferencial', 'Doutor', 'Interno'),
-       ('b1a1cdd4-d2a5-4de6-91f0-d035a1f3b8ee', 'Lucas Santos', 'lucas.santos@ifnmg.com.br', 'Química', 'Mestre',
+       ('b1a1cdd4-d2a5-4de6-91f0-d035a1f3b8ee', 'Lucas Santos', 'lucas.santos@ifnmg.edu.br', 'Química', 'Mestre',
         'Externo'),
-       ('fd2735b3-e953-4a61-8490-4cf5b731f02f', 'Camila Rodrigues', 'camila.rodrigues@ifnmg.com.br', 'Física', 'Doutor',
+       ('fd2735b3-e953-4a61-8490-4cf5b731f02f', 'Camila Rodrigues', 'camila.rodrigues@ifnmg.edu.br', 'Física', 'Doutor',
         'Interno'),
-       ('dcd7e012-86a6-437c-b579-59e6b5fdf54b', 'Gabriel Almeida', 'gabriel.almeida@ifnmg.com.br', 'Física Teórica',
+       ('dcd7e012-86a6-437c-b579-59e6b5fdf54b', 'Gabriel Almeida', 'gabriel.almeida@ifnmg.edu.br', 'Física Teórica',
         'Mestre', 'Externo'),
-       ('e5c4177b-d9c0-44b2-b8e2-724e3b91a462', 'Sofia Mendes', 'sofia.mendes@ifnmg.com.br', 'Otimização Combinatoria',
+       ('e5c4177b-d9c0-44b2-b8e2-724e3b91a462', 'Sofia Mendes', 'sofia.mendes@ifnmg.edu.br', 'Otimização Combinatoria',
         'Licenciatura', 'Interno');
 
 insert into keywords (name)
