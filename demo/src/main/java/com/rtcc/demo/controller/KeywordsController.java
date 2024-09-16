@@ -6,6 +6,7 @@ import com.rtcc.demo.exception.EntityDeletionException;
 import com.rtcc.demo.model.Keywords;
 import com.rtcc.demo.repository.KeywordsRepository;
 import com.rtcc.demo.repository.TccRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@Tag(name = "Keywords", description = "API to manage Keywords")
 @RequestMapping("/keywords")
 public class KeywordsController {
     @Autowired

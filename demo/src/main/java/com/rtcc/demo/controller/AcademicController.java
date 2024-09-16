@@ -9,6 +9,7 @@ import com.rtcc.demo.repository.AcademicRepository;
 import com.rtcc.demo.services.AcademicService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/academic")
+@Tag(name = "Academic", description = "API to manage Academics")
 public class AcademicController {
 
     @Autowired
