@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -259,7 +261,9 @@ public class TccController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/like/most-liked")
     public ResponseEntity<List<TccResponseDTO>> getMostTenLikedTccs() {
-        List<Tcc> tccList = tccRepository.mostTenLikedTccs();
+        Pageable topTen = PageRequest.of(0, 10); // Pega os primeiros 10
+
+        List<Tcc> tccList = tccRepository.mostTenLikedTccs(topTen);
         List<TccResponseDTO> tccResponseDTOList =
                 tccList.stream().map(tccService::convertToResponseDTO).toList();
 
@@ -269,7 +273,9 @@ public class TccController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/favorite/most-favorited")
     public ResponseEntity<List<TccResponseDTO>> getMostTenFavoritedTccs() {
-        List<Tcc> tccList = tccRepository.mostTenFavoritedTccs();
+        Pageable topTen = PageRequest.of(0, 10); // Pega os primeiros 10
+
+        List<Tcc> tccList = tccRepository.mostTenFavoritedTccs(topTen);
         List<TccResponseDTO> tccResponseDTOList =
                 tccList.stream().map(tccService::convertToResponseDTO).toList();
 

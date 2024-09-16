@@ -1,6 +1,7 @@
 package com.rtcc.demo.repository;
 
 import com.rtcc.demo.model.Tcc;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -53,8 +54,8 @@ public interface TccRepository extends JpaRepository<Tcc, String> {
     List<Tcc> searchTccsByYear(@Param("year") int year);
 
     @Query("SELECT t FROM Tcc t ORDER BY t.numLikes DESC LIMIT 10")
-    List<Tcc> mostTenLikedTccs();
+    List<Tcc> mostTenLikedTccs(Pageable pageable);
 
     @Query("SELECT t FROM Tcc t ORDER BY t.numFavorites DESC LIMIT 10")
-    List<Tcc> mostTenFavoritedTccs();
+    List<Tcc> mostTenFavoritedTccs(Pageable pageable);
 }
