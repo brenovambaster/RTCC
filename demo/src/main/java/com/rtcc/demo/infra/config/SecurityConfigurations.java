@@ -67,7 +67,8 @@ public class SecurityConfigurations {
 
                         .requestMatchers(HttpMethod.GET,
                                 "/tcc/{id}", "/tcc", "/tcc/search",
-                                "tcc/view/{filename}", "tcc/search/").permitAll()
+                                "tcc/view/{filename}", "tcc/search/", "/tcc/like/most-liked",
+                                "tcc/favorite/most-favorited").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "tcc/filter", "tcc/search/").permitAll()
                         .requestMatchers(HttpMethod.POST,

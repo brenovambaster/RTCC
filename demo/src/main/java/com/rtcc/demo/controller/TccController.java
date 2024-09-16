@@ -5,7 +5,7 @@ import com.rtcc.demo.DTOs.FilterDTO;
 import com.rtcc.demo.DTOs.TccRequestDTO;
 import com.rtcc.demo.DTOs.TccResponseDTO;
 import com.rtcc.demo.model.Tcc;
-import com.rtcc.demo.repository.KeywordsRepository;
+import com.rtcc.demo.repository.TccRepository;
 import com.rtcc.demo.services.TccService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,6 +34,8 @@ public class TccController {
 
     @Autowired
     private TccService tccService;
+    @Autowired
+    private TccRepository tccRepository;
 
 
     @PostMapping
@@ -166,7 +168,7 @@ public class TccController {
             tcc.setId(id);
             tcc.setNumLikes(existingTcc.get().getNumLikes());
             tcc.setNumFavorites(existingTcc.get().getNumFavorites());
-            
+
             tcc.setPathFile(existingTcc.get().getPathFile());
 
             if (file != null) {
@@ -251,4 +253,25 @@ public class TccController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/like/most-liked")
+    public ResponseEntity<List<TccResponseDTO>> getMostTenLikedTccs() {
+        List<Tcc> tccList = tccRepository.mostTenLikedTccs();
+        List<TccResponseDTO> tccResponseDTOList =
+                tccList.stream().map(tccService::convertToResponseDTO).toList();
+
+        return ResponseEntity.status(HttpStatus.OK).body(tccResponseDTOList);
+    }
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/favorite/most-favorited")
+    public ResponseEntity<List<TccResponseDTO>> getMostTenFavoritedTccs() {
+        List<Tcc> tccList = tccRepository.mostTenFavoritedTccs();
+        List<TccResponseDTO> tccResponseDTOList =
+                tccList.stream().map(tccService::convertToResponseDTO).toList();
+
+        return ResponseEntity.status(HttpStatus.OK).body(tccResponseDTOList);
+    }
+
 }

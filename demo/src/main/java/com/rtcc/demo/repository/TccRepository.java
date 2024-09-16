@@ -1,6 +1,5 @@
 package com.rtcc.demo.repository;
 
-import com.rtcc.demo.model.Professor;
 import com.rtcc.demo.model.Tcc;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -52,4 +51,10 @@ public interface TccRepository extends JpaRepository<Tcc, String> {
 
     @Query("SELECT t FROM Tcc t WHERE EXTRACT(YEAR FROM t.defenseDate) = :year")
     List<Tcc> searchTccsByYear(@Param("year") int year);
+
+    @Query("SELECT t FROM Tcc t ORDER BY t.numLikes DESC LIMIT 10")
+    List<Tcc> mostTenLikedTccs();
+
+    @Query("SELECT t FROM Tcc t ORDER BY t.numFavorites DESC LIMIT 10")
+    List<Tcc> mostTenFavoritedTccs();
 }
