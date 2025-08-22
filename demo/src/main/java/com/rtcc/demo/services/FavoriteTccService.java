@@ -25,9 +25,7 @@ public class FavoriteTccService {
     private final FavoriteTccRepository favoriteTccRepository;
     private final TccRepository tccRepository;
     private final AcademicRepository academicRepository;
-    Logger logger = Logger.getLogger(FavoriteTccService.class.getName());
 
-    @Autowired
     public FavoriteTccService(FavoriteTccRepository favoriteTccRepository, TccRepository tccRepository, AcademicRepository academicRepository) {
         this.favoriteTccRepository = favoriteTccRepository;
         this.tccRepository = tccRepository;
