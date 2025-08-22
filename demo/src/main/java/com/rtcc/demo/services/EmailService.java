@@ -14,11 +14,14 @@ import org.springframework.scheduling.annotation.Async;
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
+    private final TemplateEngine templateEngine;
 
-    @Autowired
-    private TemplateEngine templateEngine;
+    public EmailService(JavaMailSender mailSender, TemplateEngine templateEngine) {
+        this.mailSender = mailSender;
+        this.templateEngine = templateEngine;
+
+    }
 
     //TOOD: pegar email do application.properties. Fazer isso para a próxima sprint
     private static final String FROM = "rtcc.ifnmg@gmail.com";
@@ -28,14 +31,7 @@ public class EmailService {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-        String verificationLink = "http://localhost:8080/verify-email?token=" + user.getVerificationToken();
-
-        Context context = new Context();
-        context.setVariable("subject", "Confirme seu e-mail");
-        context.setVariable("message",
-                "Olá, senhor(a) " + user.getName() + ".<br/><br/>" +
-                        "Para continuarmos, pedimos que clique no link abaixo para verificar seu e-mail:<br/>" +
-                        "<a href=\"" + verificationLink + "\">Verificar E-mail</a>");
+        Context context = getContext(user);
 
         String htmlContent = templateEngine.process("email-template", context);
 
@@ -45,6 +41,18 @@ public class EmailService {
         helper.setFrom(FROM);
 
         mailSender.send(mimeMessage);
+    }
+
+    private static Context getContext(User user) {
+        String verificationLink = "http://localhost:8080/verify-email?token=" + user.getVerificationToken();
+
+        Context context = new Context();
+        context.setVariable("subject", "Confirme seu e-mail");
+        context.setVariable("message",
+                "Olá, senhor(a) " + user.getName() + ".<br/><br/>" +
+                        "Para continuarmos, pedimos que clique no link abaixo para verificar seu e-mail:<br/>" +
+                        "<a href=\"" + verificationLink + "\">Verificar E-mail</a>");
+        return context;
     }
 
 
