@@ -4,13 +4,18 @@ import com.rtcc.demo.model.User;
 import com.rtcc.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class VerificationService {
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
+
+    public VerificationService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public String verifyEmail(String token) {
         User user = userRepository.findByVerificationToken(token)

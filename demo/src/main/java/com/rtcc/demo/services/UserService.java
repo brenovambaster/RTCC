@@ -12,18 +12,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRepository userRepository;
-
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
     private final PasswordGenerator passwordGenerator;
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
-    public UserService(PasswordGenerator passwordGenerator) {
+
+    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, PasswordGenerator passwordGenerator, EmailService emailService) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
         this.passwordGenerator = passwordGenerator;
+        this.emailService = emailService;
     }
 
     public boolean updateUserPassword(String id, PasswordRequestDTO data) {

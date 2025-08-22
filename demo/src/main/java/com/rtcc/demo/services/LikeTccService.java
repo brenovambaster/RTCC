@@ -26,9 +26,8 @@ public class LikeTccService {
     private final TccRepository tccRepository;
     private final AcademicRepository academicRepository;
     private final TccService tccService;
-    Logger logger = Logger.getLogger(LikeTccService.class.getName());
 
-    @Autowired
+
     public LikeTccService(LikeTccRepository likeTccRepository, TccRepository tccRepository, AcademicRepository academicRepository, TccService tccService) {
         this.likeTccRepository = likeTccRepository;
         this.tccRepository = tccRepository;
