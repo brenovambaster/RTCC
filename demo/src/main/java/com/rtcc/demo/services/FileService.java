@@ -13,8 +13,6 @@ import java.util.UUID;
 @Service
 public class FileService {
 
-    private final String LOCATION = "uploads";
-
     public String saveFile(MultipartFile file) throws IOException {
         String originalFileName = file.getOriginalFilename();
         if (originalFileName == null || !originalFileName.toLowerCase().endsWith(".pdf")) {
@@ -25,6 +23,7 @@ public class FileService {
         String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
         String newFileName = uniqueID + fileExtension;
 
+        String LOCATION = "uploads";
         Path fileStorageLocation = Paths.get(LOCATION).toAbsolutePath().normalize();
         Files.createDirectories(fileStorageLocation);
 
