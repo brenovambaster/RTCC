@@ -33,12 +33,17 @@ public class AcademicService {
     private final UserRepository userRepository;
     private final EmailService emailService;
 
-    public AcademicService(AcademicRepository a, CourseRepository c, PasswordEncoder p, UserRepository u, EmailService e) {
-        this.academicRepository = a;
-        this.courseRepository = c;
-        this.passwordEncoder = p;
-        this.userRepository = u;
-        this.emailService = e;
+    public AcademicService(
+            AcademicRepository academicRepository,
+            CourseRepository courseRepository,
+            PasswordEncoder passwordEncoder,
+            UserRepository userRepository,
+            EmailService emailService) {
+        this.academicRepository = academicRepository;
+        this.courseRepository = courseRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.emailService = emailService;
 
     }
 
