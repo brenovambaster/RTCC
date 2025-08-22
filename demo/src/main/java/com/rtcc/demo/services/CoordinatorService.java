@@ -28,19 +28,26 @@ import java.util.Optional;
 @Service
 public class CoordinatorService {
 
-    @Autowired
-    private CoordinatorRepository coordinatorRepository;
+    private final CoordinatorRepository coordinatorRepository;
+    private final CourseRepository courseRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
-    @Autowired
-    private CourseRepository courseRepository;
+    public CoordinatorService(
+            CoordinatorRepository coordinatorRepo,
+            CourseRepository courseRepo,
+            PasswordEncoder passwordEncoder,
+            UserRepository userRepo,
+            EmailService emailService
+    ) {
+        this.coordinatorRepository = coordinatorRepo;
+        this.courseRepository = courseRepo;
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepo;
+        this.emailService = emailService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private EmailService emailService;
-
+    }
 
     @Transactional
     public void createCoordinator(CoordinatorRequestDTO data) throws MessagingException {
